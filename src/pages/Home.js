@@ -318,7 +318,7 @@ const Home = () => {
           )}
         </div>
 
-        {updateModalOpen && (
+        {/* {updateModalOpen && (
           <UpdatePostModal
             user={user}
             errMsg={errMsg}
@@ -330,7 +330,7 @@ const Home = () => {
             setFile={setFile}
             file={file}
           />
-        )}
+        )} */}
 
         {/* RIGHT */}
         <div className='hidden w-1/5 h-full lg:flex flex-col gap-8 overflow-y-auto'>
