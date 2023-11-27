@@ -89,7 +89,7 @@ const Login = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextInput
               name='username'
-              placeholder='Username'
+              placeholder='Username...'
               label='Username'
               type='text'
               register={register('username', {
