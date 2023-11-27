@@ -7,7 +7,8 @@ import { MdPublic } from 'react-icons/md';
 import { FaLock, FaUserFriends } from 'react-icons/fa';
 
 const PostHeader = ({ post, user, deletePost, handleUpdate, newData }) => {
-  const isCurrentUserPost = user._id === post.user._id;
+  const isCurrentUserPost = user._id === post.user._id   ;
+  
 
   const menuItems = [
     {
@@ -22,7 +23,7 @@ const PostHeader = ({ post, user, deletePost, handleUpdate, newData }) => {
       key: 'update',
       onClick: () => handleUpdate(post),
     },
-    isCurrentUserPost || user.admin === true && {
+    isCurrentUserPost || user.admin === true  && {
       label: 'Delete',
       key: 'delete',
       onClick: () => deletePost(post._id),

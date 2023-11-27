@@ -26,7 +26,6 @@ const PostCard = ({
   file,
   id,
 }) => {
-  console.log(post.views);
   const [showAll, setShowAll] = useState(0);
   const [showReply, setShowReply] = useState(0);
   const [comments, setComments] = useState([]);
