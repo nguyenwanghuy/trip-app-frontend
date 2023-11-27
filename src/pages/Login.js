@@ -89,7 +89,7 @@ const Login = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextInput
               name='username'
-              placeholder='Username...'
+              placeholder='Username'
               label='Username'
               type='text'
               register={register('username', {
@@ -124,11 +124,10 @@ const Login = () => {
 
             {errMsg.message && (
               <span
-                className={`text-sm ${
-                  errMsg?.status == 'failed'
-                    ? 'text-[#f64949fe]'
-                    : 'text-[#2ba150fe]'
-                } mt-0.5`}
+                className={`text-sm ${errMsg?.status == 'failed'
+                  ? 'text-[#f64949fe]'
+                  : 'text-[#2ba150fe]'
+                  } mt-0.5`}
               >
                 {errMsg?.message}
               </span>
@@ -144,6 +143,12 @@ const Login = () => {
                 Login
               </button>
             )}
+            <Link to="/register" className="registration-link">
+              <button className="create-account-button bg-[#42b72a] w-full rounded-md text-white py-2 mt-5 hover:bg-[#36a420] hover:scale-105 duration-300">
+                <span className="facebook-icon"></span>
+                <span>Tạo tài khoản mới</span>
+              </button>
+            </Link>
           </form>
         </div>
         {/* RIGHT */}
