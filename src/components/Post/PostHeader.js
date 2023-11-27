@@ -22,7 +22,7 @@ const PostHeader = ({ post, user, deletePost, handleUpdate, newData }) => {
       key: 'update',
       onClick: () => handleUpdate(post),
     },
-    isCurrentUserPost && {
+    isCurrentUserPost || user.admin === true && {
       label: 'Delete',
       key: 'delete',
       onClick: () => deletePost(post._id),
