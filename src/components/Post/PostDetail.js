@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest, likePost } from '../../utils';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Carousel } from 'antd'; // Import Carousel from Ant Design
+import { Carousel } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Comment from '../Comment/Comment';
 import PostAction from './PostAction';
 import UseFunction from '../Function/UseFunction';
 import moment from 'moment';
+
 const PostDetail = () => {
   const { user } = useSelector((state) => state.user);
   const [post, setPost] = useState(null);
@@ -22,13 +23,6 @@ const PostDetail = () => {
 
   const { id } = useParams();
   const { handleLikePost, handleDeletePost } = UseFunction();
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
 
   const getPostComments = async (id, token) => {
     try {
@@ -90,11 +84,11 @@ const PostDetail = () => {
     }
   }, [post]);
 
-  //
   const navigate = useNavigate();
   const handleGoBack = () => {
     navigate(-1);
   };
+
   return (
     <div className='flex flex-col md:flex-row h-screen w-ful'>
       {post && (
@@ -102,7 +96,7 @@ const PostDetail = () => {
           <div className='w-2/3 h-screen flex items-center justify-center bg-[black]'>
             <Link
               to='/'
-              className='flex gap-2 items-center absolute top-5 left-5'
+              className='flex gap-2 items-center absolute top-5 left-5 text-decoration-none'
             >
               <div className='p-1  md:p-2 bg-[#065ad8] rounded text-white font-extrabold text-xl'>
                 TS
@@ -118,32 +112,38 @@ const PostDetail = () => {
                 <span style={{ fontSize: '24px' }}>×</span>
               </button>
             </Link>
-            <Carousel
-              dotPosition='bottom'
-              autoplay
-              className='w-[55rem] h-full '
-            >
+            <Carousel indicators={false} controls={true} className='w-full'>
               {post.image.map((image, index) => (
-                <div key={index}>
-                  <img src={image} className='w-full h-full ' />
-                </div>
+                <Carousel.Item key={index}>
+                  <img
+                    src={image}
+                    className='d-block mx-auto h-[35rem] object-cover'
+                    alt={`Slide ${index + 1}`}
+                  />
+                </Carousel.Item>
               ))}
             </Carousel>
           </div>
           <div className='w-1/3 mx-5 my-5 h-5/6 overflow-y-scroll'>
             <div>
               <div>
-                <div className='flex items-center '>
-                  <Link to={'/trip/user/' + post.user?._id}>
+                <div className='flex items-center gap-2'>
+                  <Link
+                    to={'/trip/user/' + post.user?._id}
+                    className='text-decoration-none'
+                  >
                     <img
                       className='w-12 h-12 rounded-full object-cover'
                       src={post.user.avatar}
                     />
                   </Link>
                   <div>
-                    <Link to={'/trip/user/' + post.user?._id}>
+                    <Link
+                      to={'/trip/user/' + post.user?._id}
+                      className='text-decoration-none'
+                    >
                       <span>
-                        <p className='text-base font-bold'>
+                        <p className='text-base font-bold text-ascent-1 my-0'>
                           {post.user.username}
                         </p>
                       </span>
@@ -157,7 +157,7 @@ const PostDetail = () => {
                 </div>
               </div>
 
-              <div>{post.description}</div>
+              <div className='mt-2'>{post.description}</div>
               <p>{post.content}</p>
             </div>
             <div>

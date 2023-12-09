@@ -30,16 +30,16 @@ useEffect(() => {
       setShow(false)
     }
   return (
-    <div className='w-full bg-primary shadow-sm rounded-lg px-5 py-5 '>
+    <div className='w-full bg-first shadow-sm rounded-lg px-4 py-3 '>
       <div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
         <span>Friend Suggestion</span>
       </div>
-      <div className='w-full gap-4 pt-4 flex flex-col'>
+      <div className='w-full gap-3 pt-3 flex flex-col'>
         {suggestedFriends?.map((friend) => (
           <div className='flex items-center justify-between' key={friend._id}>
             <Link
               to={`/trip/user/${friend._id}`}
-              className='w-full flex gap-4 items-center cursor-pointer'
+              className='w-full flex gap-4 items-center cursor-pointer text-decoration-none'
             >
               <img
                 src={friend?.avatar}
@@ -47,7 +47,7 @@ useEffect(() => {
                 className='w-10 h-10 object-cover rounded-full'
               />
               <div className='flex-1'>
-                <p className='text-base font-medium text-ascent-1'>
+                <p className='text-base font-medium text-ascent-1 my-0'>
                   {friend?.username}
                 </p>
                 <span className='text-sm text-ascent-2'></span>

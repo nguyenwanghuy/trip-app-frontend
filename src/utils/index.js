@@ -2,8 +2,11 @@ import axios from 'axios';
 import { SetPosts } from '../redux/postSlice.js';
 import { SetAlbums } from '../redux/albumSlice.js';
 import axiosJWT from '../pages/Home.js'
+import { SetVacations } from '../redux/vacationSlice.js';
+
 // const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
 const API_URL = 'http://localhost:8001/trip' // config
+
 
 export const API = axios.create({
   baseURL: API_URL,
@@ -26,8 +29,7 @@ export const apiRequest = async ({ url, token, data, method }) => {
 
     return result.data;
   } catch (error) {
-    const err = error.response.data;
-    console.log(err.error.message);
+    console.log(error);
   }
 };
 
@@ -76,6 +78,7 @@ export const handleAvatarUpload = async ({ file, token }) => {
   }
 };
 //giong post
+
 export const fetchPosts = async (token, dispatch, uri, data) => {
   try {
     const res = await apiRequest({
@@ -91,7 +94,7 @@ export const fetchPosts = async (token, dispatch, uri, data) => {
   }
 };
 
-export const fetchPostsByPage = async (token, dispatch, page, pageSize,setTotalPages,setCurrentPage) => {
+export const fetchPostsByPage = async (token, dispatch, page, pageSize) => {
   try {
     const res = await apiRequest({
       url: `/post?page=${page}&pageSize=${pageSize}`,
@@ -100,8 +103,8 @@ export const fetchPostsByPage = async (token, dispatch, page, pageSize,setTotalP
     });
 
     dispatch(SetPosts(res?.data.posts));
-    setTotalPages(res?.data.totalPages);
-    setCurrentPage(page);
+    // setTotalPages(res?.data.totalPages);
+    // setCurrentPage(page);
     return;
   } catch (error) {
     console.log(error);
@@ -110,6 +113,7 @@ export const fetchPostsByPage = async (token, dispatch, page, pageSize,setTotalP
 
 export const likePost = async ({ uri, token }) => {
   try {
+    console.log(uri);
     const res = await apiRequest({
       url: uri,
       token,
@@ -220,4 +224,31 @@ export const deleteAlbums = async (id, token) => {
     console.log(error);
   }
 };
-//
+
+export const fetchVacations = async (token, dispatch, uri, data) => {
+  try {
+    const res = await apiRequest({
+      url: uri || '/vacation',
+      token,
+      method: 'GET',
+      data: data || {},
+    });
+    dispatch(SetVacations(res?.data));
+    return;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteVacation = async (id, token) => {
+  try {
+    const res = await apiRequest({
+      url: '/vacation/' + id,
+      token,
+      method: 'DELETE',
+    });
+    return;
+  } catch (error) {
+    console.log(error);
+  }
+};

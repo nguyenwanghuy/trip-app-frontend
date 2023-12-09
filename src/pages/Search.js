@@ -54,11 +54,11 @@ const Search = () => {
   };
 
   return (
-    <div className='w-full px-0 lg:px-10 pb-20 2xl:px-20 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
+    <div className='w-full px-5 lg:px-20 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
       <NavBar />
 
       <div className='h-full w-full flex flex-col gap-6 overflow-y-auto'>
-        <div className='grid grid-cols-2 gap-4 bg-primary rounded-lg px-4 py-4 mt-4 shadow'>
+        <div className='grid grid-cols-2 gap-4 bg-first rounded-lg px-4 py-4 mt-4 shadow'>
           {!searchUsersName || searchUsersName.length === 0 ? (
             <p>No results found</p>
           ) : (
@@ -66,16 +66,19 @@ const Search = () => {
               <div>
                 <div
                   key={searchedUser._id}
-                  className='flex items-center justify-between border px-2 py-2 border-[#66666690] rounded-lg'
+                  className='flex items-center justify-between border px-2 border-[#66666690] rounded-lg'
                 >
-                  <Link to={`/trip/user/${searchedUser._id}`}>
+                  <Link
+                    to={`/trip/user/${searchedUser._id}`}
+                    className='text-decoration-none flex items-center justify-center'
+                  >
                     <div className='flex items-center gap-2 px-2 py-2'>
                       <img
                         src={searchedUser.avatar}
                         alt={`Avatar of ${searchedUser.username}`}
                         className='w-[4rem] h-[4rem] rounded-full'
                       />
-                      <p>{searchedUser.username}</p>
+                      <p className='mb-0'>{searchedUser.username}</p>
                     </div>
                   </Link>
                   <div className='flex gap-1'>

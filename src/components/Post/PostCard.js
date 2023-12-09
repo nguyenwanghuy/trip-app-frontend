@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiRequest } from '../../utils';
+import { apiRequest, likePost } from '../../utils';
 import { Comment, PostAction, PostContent, PostHeader } from '../index';
 import UpdatePostModal from '../UpdatePostModal ';
 import { Link } from 'react-router-dom';
@@ -25,6 +25,8 @@ const PostCard = ({
   updatePost,
   file,
   id,
+  vacation,
+  fetchVacation,
 }) => {
   const [showAll, setShowAll] = useState(0);
   const [showReply, setShowReply] = useState(0);
@@ -78,7 +80,6 @@ const PostCard = ({
         token: user.token,
         method: 'POST',
       });
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -96,12 +97,12 @@ const PostCard = ({
   }, []);
 
   return (
-    <div className='mb-2 bg-primary p-4 rounded-xl'>
+    <div className='bg-first px-4 pt-4 my-7 rounded-xl'>
       <PostHeader
-        post={post}
         deletePost={deletePost}
         user={user}
         handleUpdate={handleUpdatePost}
+        post={post}
       />
 
       {showAll ? (
@@ -110,6 +111,7 @@ const PostCard = ({
         <Link
           to={`/trip/post/${post._id}`}
           onClick={() => incrementPostViewCount(post._id)}
+          className='text-decoration-none'
         >
           <PostContent post={post} showAll={showAll} setShowAll={setShowAll} />
         </Link>
@@ -118,10 +120,12 @@ const PostCard = ({
       <PostAction
         user={user}
         post={post}
+        vacation={vacation}
         showComments={showComments}
         setShowComments={setShowComments}
         getComments={getComments}
         handleLike={handleLike}
+        fetchVacation={fetchVacation}
       />
       {showComments === post._id && (
         <Comment
@@ -151,7 +155,6 @@ const PostCard = ({
           updatePost={updatePost}
           onClose={() => setUpdateModalOpen(false)}
           file={file}
-          initialFile={file[0]}
           initialDescription={post.description}
         />
       )}

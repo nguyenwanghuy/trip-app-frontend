@@ -75,8 +75,8 @@ const NavBar = () => {
   );
 
   return (
-    <div className='topbar w-full flex items-center justify-between py-3 md:py-3 px-4 bg-primary'>
-      <Link to='/' className='flex gap-2 items-center'>
+    <div className='topbar w-full flex items-center justify-between py-3 md:py-3 px-4 bg-first'>
+      <Link to='/' className='flex gap-2 items-center text-decoration-none'>
         <div className='p-1 md:p-2 bg-[#065ad8] rounded text-white font-extrabold text-xl'>
           TS
         </div>
@@ -88,9 +88,9 @@ const NavBar = () => {
         onSubmit={handleSearch}
       >
         <Input
-          type='text'
+          type='search'
           placeholder='Search...'
-          className='w-[18rem] lg:w-[38rem] rounded-l-xl rounded-r-none py-3 text-ascent-2 text-sm '
+          className='w-[18rem] lg:w-[38rem] h-11 rounded-l-xl rounded-r-none py-3 text-ascent-2 text-sm '
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

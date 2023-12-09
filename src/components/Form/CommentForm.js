@@ -31,13 +31,13 @@ const CommentForm = ({
     mode: 'onChange',
   });
 
-  useEffect(() => {
-    const socket = io('http://localhost:8001');
-    setSocket(socket);
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const socket = io('http://localhost:8001');
+  //   setSocket(socket);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (editComment) {
@@ -132,6 +132,7 @@ const CommentForm = ({
               <CustomButton
                 title='đăng'
                 type='submit'
+                // onClick={sendComment}
                 containerStyles=' text-[#DADDE1] py-1 rounded-full font-semibold text-xl pr-2'
               />
             )}

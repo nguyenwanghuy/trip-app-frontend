@@ -1,31 +1,21 @@
 import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import Carousel from 'react-bootstrap/Carousel';
 
 const PostImage = ({ post }) => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
   return (
-    <div className='h-[30rem] mb-8'>
+    <div className='h-[30rem] mb-8 w'>
       {Array.isArray(post.image) ? (
-        <Slider {...settings}>
+        <Carousel>
           {post.image.map((image, index) => (
-            <div key={index}>
+            <Carousel.Item key={index}>
               <img
                 src={image}
                 alt={`Image ${index + 1}`}
-                // className='max-h-[30rem] w-auto mx-auto'
                 className='h-[30rem] w-full object-cover mx-auto'
               />
-            </div>
+            </Carousel.Item>
           ))}
-        </Slider>
+        </Carousel>
       ) : (
         <p>post.image is not an array</p>
       )}

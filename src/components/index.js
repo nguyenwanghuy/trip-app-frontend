@@ -2,7 +2,7 @@ import TextInput from './TextInput';
 import Loading from './Loading';
 import CustomButton from './CustomButton';
 import NavBar from './NavBar';
-import PostModal from './PostModal';
+import PostModal from './Modal/VacationModal';
 import ProfileCard from './ProfileCard';
 import FriendsCard from './FriendsCard';
 import PostCard from './Post/PostCard';

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   apiRequest,
@@ -8,25 +8,28 @@ import {
   fetchAlbums,
   likeAlbums,
   deleteAlbums,
+  fetchVacations,
 } from '../../utils';
 
 const UseFunction = (id) => {
   const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
-  const handleLikePost = async (uri) => {
-    try {
-      setLoading(true);
-      await likePost({ uri: uri, token: user?.token });
-      await fetchPosts(user?.token, dispatch);
-    } catch (error) {
-      console.error('Error liking post:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleLikePost = useCallback(
+    async (uri) => {
+      try {
+        setLoading(true);
+        await likePost({ uri: uri, token: user?.token });
+        await fetchPosts(user?.token, dispatch);
+      } catch (error) {
+        console.error('Error liking post:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?.token, dispatch],
+  );
 
   const handleDeletePost = async (postId) => {
     try {
@@ -92,8 +95,15 @@ const UseFunction = (id) => {
     }
   };
 
+  const fetchVacation = async () => {
+    setLoading(true);
+    await fetchVacations(user?.token, dispatch);
+    setLoading(false);
+  };
+
   useEffect(() => {
     fetchAlbum();
+    fetchVacation();
   }, []);
 
   return {
@@ -105,6 +115,7 @@ const UseFunction = (id) => {
     handleLikeAlbum,
     handleDeleteAlbum,
     fetchAlbum,
+    fetchVacation,
   };
 };
 

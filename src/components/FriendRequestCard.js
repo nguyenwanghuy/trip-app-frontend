@@ -2,6 +2,7 @@
   import { Link } from 'react-router-dom';
   import { CustomButton } from '../components';
   import { io } from 'socket.io-client';
+import { Button } from 'antd';
   const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
     const [friendPending, setFriendPending] = useState(friendRequest)
     
@@ -46,12 +47,12 @@
               </Link>
 
               <div className='flex gap-1'>
-                <CustomButton
+                <Button
                   title='Accept'
                   containerStyles='bg-[#0444a4] text-xs text-white px-1.5 py-1 rounded-full'
                   onClick={() => handleAcceptFriendRequest(_id, 'Accepted')}
                 />
-                <CustomButton
+                <Button
                   title='Deny'
                   containerStyles='border border-[#666] text-xs text-ascent-1 px-1.5 py-1 rounded-full'
                   onClick={() => handleAcceptFriendRequest(_id, 'Denied')}

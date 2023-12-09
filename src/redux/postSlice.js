@@ -21,5 +21,3 @@ export function SetPosts(post) {
     dispatch(postSlice.actions.getPosts(post));
   };
 }
-
-// giống state
