@@ -49,7 +49,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
+// console.log(posts);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     fetchPostsByPage(user?.token, dispatch, newPage, itemsPerPage);
@@ -239,7 +239,36 @@ const Home = () => {
       console.error(error);
     }
   };
-
+const refreshToken = async() =>{
+  try {
+    const res = await axios.post('/auth/refresh', {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+  let axiosJWT = axios.create();
+  axiosJWT.interceptors.request.use(
+    async(config) => {
+      let date = new Date()
+      const decodedToken = jwtDecode(user?.token);
+      if(decodedToken.exp < date.getTime()/1000){
+        const data = await refreshToken();
+        const refreshUser = {
+          ...user,
+          token: data.token,
+        };
+        dispatch(userLogin(refreshUser));
+        config.headers["token"] = data.token
+      }
+      return config;
+    },
+    (err)=> {
+      return Promise.reject(err);
+    }
+    )
   useEffect(() => {
     fetchPost();
     fetchSuggestedRequests();

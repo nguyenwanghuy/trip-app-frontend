@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { SetPosts } from '../redux/postSlice.js';
 import { SetAlbums } from '../redux/albumSlice.js';
-
-const API_URL = 'https://trip-app-backend.onrender.com/trip';
+import axiosJWT from '../pages/Home.js'
+// const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
+const API_URL = 'http://localhost:8001/trip' // config
 
 export const API = axios.create({
   baseURL: API_URL,

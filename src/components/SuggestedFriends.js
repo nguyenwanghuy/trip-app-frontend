@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BsPersonFillAdd } from 'react-icons/bs';
 import { CustomButton } from '.';
-
+import { io } from 'socket.io-client';
+import { useSelector } from 'react-redux';
 const SuggestedFriends = ({
   suggestedFriends,
   handleFriendRequest,
   setShow,
 }) => {
+  const { user } = useSelector((state) => state.user);
+  // console.log(user);
+const [socket, setSocket] = useState(null)
+useEffect(() => {
+  const newSocket = io('http://localhost:8001');
+  setSocket(newSocket);
+  newSocket.on('newFriend', (friendRequest) => {
+    console.log(friendRequest, 'newFriend event');
+  });
+  return () => {
+    newSocket.disconnect();
+  };
+}, []);
+    // const socket = io('http://localhost:8001');
+    const handleAddFriend = async(friendId) => {
+      handleFriendRequest(friendId)
+     await socket.emit('friendReq', {idRecipient: friendId, requestFrom: user._id, avatar:user.avatar, username:user.username});
+      // console.log(friendId, 'friend suggestion');
+      setShow(false)
+    }
   return (
     <div className='w-full bg-primary shadow-sm rounded-lg px-5 py-5 '>
       <div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
@@ -37,7 +58,7 @@ const SuggestedFriends = ({
               <button
                 className='bg-[#0444a430] text-sm text-white p-1 rounded'
                 onClick={() => {
-                  handleFriendRequest(friend._id);
+                  handleAddFriend(friend._id);
                   setShow(false);
                 }}
               >
