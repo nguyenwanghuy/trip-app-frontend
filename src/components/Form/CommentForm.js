@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { TextInput, Loading, CustomButton } from '../index';
 import { apiRequest } from '../../utils';
 import { RiSendPlane2Fill } from 'react-icons/ri';
+import { io } from 'socket.io-client';
+import { Input } from 'antd';
 
 const CommentForm = ({
   user,
@@ -14,6 +16,8 @@ const CommentForm = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState('');
+  const [currentComment, setCurrentComment] = useState('');
+  const socket = io('http://localhost:8001');
 
   const {
     register,
@@ -31,7 +35,7 @@ const CommentForm = ({
     }
   }, [editComment, setValue]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     setLoading(true);
     setErrMsg('');
 
@@ -47,7 +51,7 @@ const CommentForm = ({
       }
 
       const newData = {
-        description: data?.description,
+        description: currentComment,
         from: user.username,
         replyAt: replyAt,
       };
@@ -91,14 +95,16 @@ const CommentForm = ({
         />
 
         <div className='relative flex-grow'>
-          <TextInput
-            name='description'
-            styles='w-full rounded-full py-3 mb-1 pr-12'
-            placeholder={replyAt ? `Reply @${replyAt}` : 'Comment this post'}
-            register={register('description', {
-              required: 'Comment can not be empty',
-            })}
-            error={errors.description ? errors.description : ''}
+          <Input
+            // name='description'
+            // styles='w-full rounded-full py-3 mb-1 pr-12'
+            // placeholder={replyAt ? `Reply @${replyAt}` : 'Comment this post'}
+            // register={register('description', {
+            //   required: 'Comment can not be empty',
+            // })}
+            // error={errors.description ? errors.description : ''}
+            type='text'
+            onChange={(e) => setCurrentComment(e.target.value)}
           />
 
           <div className='absolute top-[0.1rem] right-0 h-full flex items-center pr-3'>
@@ -106,26 +112,14 @@ const CommentForm = ({
               <Loading />
             ) : (
               <CustomButton
-                title=<RiSendPlane2Fill />
+                title='đăng'
                 type='submit'
+                // onClick={sendComment}
                 containerStyles=' text-[#DADDE1] py-1 rounded-full font-semibold text-xl pr-2'
               />
             )}
           </div>
         </div>
-
-        {errMsg?.message && (
-          <span
-            role='alert'
-            className={`text-sm ${
-              errMsg?.status === 'failed'
-                ? 'text-[#f64949fe]'
-                : 'text-[#2ba150fe]'
-            } mt-0.5`}
-          >
-            {errMsg?.message}
-          </span>
-        )}
       </div>
     </form>
   );

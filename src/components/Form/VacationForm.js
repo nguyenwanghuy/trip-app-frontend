@@ -1,7 +1,7 @@
 import React from 'react';
-import PostModal from '../Modal/PostModal';
+import VacationModal from '../Modal/VacationModal';
 
-const PostForm = ({
+const VacationForm = ({
   user,
   handlePostSubmit,
   handleFileChange,
@@ -10,7 +10,6 @@ const PostForm = ({
   file,
   fileList,
   handleRemove,
-  milestones,
 }) => {
   return (
     <div>
@@ -25,7 +24,7 @@ const PostForm = ({
           </div>
 
           <div className='w-full'>
-            <PostModal
+            <VacationModal
               user={user}
               handlePostSubmit={handlePostSubmit}
               handleFileChange={handleFileChange}
@@ -34,7 +33,6 @@ const PostForm = ({
               file={file}
               fileList={fileList}
               handleRemove={handleRemove}
-              milestones={milestones}
             />
           </div>
         </div>
@@ -43,4 +41,4 @@ const PostForm = ({
   );
 };
 
-export default PostForm;
+export default VacationForm;

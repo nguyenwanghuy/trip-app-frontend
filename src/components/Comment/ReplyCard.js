@@ -8,7 +8,10 @@ const ReplyCard = ({ reply, user, handleLike }) => {
   return (
     <div className='w-full py-3'>
       <div className='flex gap-3  mb-1'>
-        <Link to={'/profile/' + reply?.user._id}>
+        <Link
+          to={'/profile/' + reply?.user._id}
+          className='text-decoration-none'
+        >
           <img
             src={reply.user.avatar}
             alt={reply?.user.username}
@@ -17,7 +20,10 @@ const ReplyCard = ({ reply, user, handleLike }) => {
         </Link>
 
         <div className='bg-[#DADDE1] px-3 py-1 rounded-xl'>
-          <Link to={'/profile/' + reply?.user._id}>
+          <Link
+            to={'/profile/' + reply?.user._id}
+            className='text-decoration-none'
+          >
             <p className='font-medium text-base text-ascent-1'>
               {reply?.user.username}
             </p>

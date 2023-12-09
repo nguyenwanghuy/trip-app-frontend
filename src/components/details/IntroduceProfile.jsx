@@ -99,8 +99,8 @@ const IntroduceProfile = ({ userInfo, fetchUserData }) => {
   const formatDateOfBirth = moment(userInfo.dateOfBirth).format('DD-MM-YYYY');
   // console.log(userInfo);
   return (
-    <div className='bg-primary px-4 py-4 rounded-md shadow-lg'>
-      <div className='w-full flex flex-col gap-2 py-4  '>
+    <div className='bg-first px-4 py-1 rounded-md shadow-lg'>
+      <div className='w-full flex flex-col py-2  '>
         <div className=''>
           {user._id === userInfo?._id && (
             <Button

@@ -59,7 +59,7 @@ const ImagesProfile = ({ UserId, userInfo }) => {
           <div className='grid grid-cols-5 gap-4'>
             {user._id === userInfo?._id && (
               <div>
-                <Link to='/trip/create-album'>
+                <Link to='/trip/create-album' className='text-decoration-none'>
                   <Card className='h-full flex items-center justify-center'>
                     <div className='text-6xl rounded-full w-20 h-20 text-ascent-2 border-ascent-2 border-dashed border-4'>
                       +

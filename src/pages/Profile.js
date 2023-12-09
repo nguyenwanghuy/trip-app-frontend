@@ -1,17 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-import { FloatButton, Tabs } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../components/Loading';
-import FriendsCard from '../components/FriendsCard';
-import PostCard from '../components/index';
 import { NavBar } from '../components';
 import {
   apiRequest,
   deletePost,
   fetchPosts,
-  handleAvatarUpload,
   handleFileUpload,
   likePost,
 } from '../utils';
@@ -19,7 +13,7 @@ import PostProfile from '../components/details/PostProfile';
 import IntroduceProfile from '../components/details/IntroduceProfile';
 import FriendsProfile from '../components/details/FriendsProfile';
 import ImagesProfile from '../components/details/ImagesProfile';
-import { Button, Modal } from 'antd'; // Import Button and Modal
+import { Button, Modal } from 'antd';
 import { HiOutlineCamera } from 'react-icons/hi2';
 
 const Profile = () => {
@@ -41,7 +35,6 @@ const Profile = () => {
         token: user.token,
         method: 'GET',
       });
-      // console.log(res);
       setUserInfo(res.data);
       setLoading(false);
     } catch (error) {
@@ -119,10 +112,10 @@ const Profile = () => {
 
   return (
     <div>
-      <div className='home w-full px-0 lg:px-10 pb-20 2xl:px-20 bg-bgColor h-screen overflow-y-auto'>
+      <div className='home w-full px-10 lg:px-10 pb-20 2xl:px-20 bg-bgColor h-screen overflow-y-auto'>
         <NavBar />
 
-        <div className='w-full rounded-lg h-[35rem] mt-5 flex flex-col justify-between items-center lg:gap-4 pb-10 bg-primary relative '>
+        <div className='w-full rounded-lg h-[35rem] mt-5 flex flex-col justify-between items-center lg:gap-4 pb-10 bg-first relative '>
           <div className='w-full h-3/4 '>
             <img
               src='https://img.freepik.com/free-photo/old-black-background-grunge-texture-dark-wallpaper-blackboard-chalkboard-room-wall_1258-28312.jpg'
@@ -153,25 +146,25 @@ const Profile = () => {
           <div className='absolute bottom-[-1.5rem] flex'>
             <Button
               onClick={() => setActiveComponent('posts')}
-              className='bg-primary rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
+              className='bg-first rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
             >
               Post
             </Button>
             <Button
               onClick={() => setActiveComponent('introduce')}
-              className='bg-primary rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
+              className='bg-first rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
             >
               About
             </Button>
             <Button
               onClick={() => setActiveComponent('friends')}
-              className='bg-primary rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner '
+              className='bg-first rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner '
             >
               Friends
             </Button>
             <Button
               onClick={() => setActiveComponent('images')}
-              className='bg-primary rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
+              className='bg-first rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
             >
               Gallery
             </Button>

@@ -1,14 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { LiaEditSolid } from 'react-icons/lia';
-import {
-  BsBriefcase,
-  BsFacebook,
-  BsInstagram,
-  BsPersonFillAdd,
-} from 'react-icons/bs';
-import { FaTwitterSquare } from 'react-icons/fa';
 import { CiLocationOn } from 'react-icons/ci';
 import { LiaBirthdayCakeSolid } from 'react-icons/lia';
 import { PiGenderIntersex, PiFinnTheHuman } from 'react-icons/pi';
@@ -25,7 +15,7 @@ const InfoProfileCard = ({ user }) => {
     user.profession;
   const formatDateOfBirth = moment(user.dateOfBirth).format('DD-MM-YYYY');
   return (
-    <div className='w-full bg-primary flex flex-col items-center shadow-sm rounded-xl px-6 py-4'>
+    <div className='w-full bg-first flex flex-col items-center shadow-sm rounded-xl px-6 py-4'>
       {hasUserDetails && (
         <div className='w-full flex flex-col gap-2 py-4 border-b border-[#66666645] '>
           {user?.fullname && (

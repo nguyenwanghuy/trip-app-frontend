@@ -10,7 +10,6 @@ import CustomButton from '../../CustomButton';
 import FriendListDropdown from '../../FriendListDropdown';
 import { Select } from 'antd';
 import { Option } from 'antd/es/mentions';
-import AvatarEditor from 'react-avatar-editor';
 
 const AlbumPost = () => {
   const { user } = useSelector((state) => state.user);
@@ -115,7 +114,7 @@ const AlbumPost = () => {
             onSubmit={handleSubmit((data) =>
               handleAlbumSubmit(data, selectedFriends, visibility),
             )}
-            className='bg-primary flex flex-col flex-grow justify-between h-full '
+            className='bg-first flex flex-col flex-grow justify-between h-full '
           >
             <div>
               <Select

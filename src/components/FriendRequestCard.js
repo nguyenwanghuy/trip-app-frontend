@@ -4,7 +4,7 @@ import { CustomButton } from '../components';
 
 const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
   return (
-    <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
+    <div className='w-full bg-first shadow-sm rounded-lg px-4 py-3'>
       <div className='flex items-center justify-between text-xl text-ascent-1 pb-2 border-b border-[#66666645]'>
         <span> Friend Request</span>
         <span>{friendRequest?.length}</span>
@@ -14,7 +14,7 @@ const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
           <div key={_id} className='flex items-center justify-between'>
             <Link
               to={'/trip/user/' + from._id}
-              className='w-full flex gap-4 items-center cursor-pointer'
+              className='w-full flex gap-3 items-center cursor-pointer text-decoration-none'
             >
               <img
                 src={from?.avatar}
@@ -22,7 +22,7 @@ const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
                 className='w-10 h-10 object-cover rounded-full'
               />
               <div className='flex-1'>
-                <p className='text-base font-medium text-ascent-1'>
+                <p className='text-base font-medium text-ascent-1 my-0'>
                   {from?.username}
                 </p>
               </div>

@@ -147,7 +147,7 @@ const AlbumEdit = () => {
             onSubmit={handleSubmit((data) =>
               handleAlbumEdit(data, selectedFriends, visibility),
             )}
-            className='bg-primary flex flex-col flex-grow justify-between h-full '
+            className='bg-first flex flex-col flex-grow justify-between h-full '
           >
             <div>
               <Select

@@ -39,9 +39,12 @@ const Comment = ({
           <Loading />
         ) : comments && comments.length > 0 ? (
           comments.map((comment) => (
-            <div className='w-full pt-5' key={comment._id}>
+            <div className='w-full pt-3' key={comment._id}>
               <div className='flex gap-1 mb-1'>
-                <Link to={'/profile/' + comment?.userId?._id}>
+                <Link
+                  to={'/profile/' + comment?.userId?._id}
+                  className='text-decoration-none'
+                >
                   <img
                     src={comment?.user?.avatar}
                     alt={comment?.user.username}
@@ -49,12 +52,15 @@ const Comment = ({
                   />
                 </Link>
                 <div className='bg-[#DADDE1] px-3 py-1 rounded-xl'>
-                  <Link to={'/profile/' + comment?.userId?._id}>
-                    <p className='font-medium text-base text-ascent-1'>
+                  <Link
+                    to={'/profile/' + comment?.userId?._id}
+                    className='text-decoration-none'
+                  >
+                    <p className='font-medium text-base text-ascent-1 my-0'>
                       {comment?.user?.username}
                     </p>
                   </Link>
-                  <p className='text-ascent-2'>{comment.description}</p>
+                  <p className='text-ascent-2  my-0'>{comment.description}</p>
                 </div>
               </div>
 

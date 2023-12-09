@@ -6,6 +6,8 @@ import { Button, Loading, TextInput } from '../components';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { apiRequest } from '../utils';
 import { userLogin } from '../redux/userSlice';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 
 const Register = () => {
   const [show, setShow] = useState(false);
@@ -78,115 +80,105 @@ const Register = () => {
 
   return (
     <div className='bg-bgColor w-full h-[100vh] flex items-center justify-center p-6'>
-      <div className='w-full md:w-2/3 h-fit lg:h-full 2xl:h-5/6 py-8 lg:py-0 flex flex-row-reverse bg-primary rounded-xl overflow-hidden shadow-xl'>
+      <div className='w-full md:w-2/3 h-fit lg:h-full 2xl:h-6/7 py-8 lg:py-0 flex bg-first flex-row-reverse rounded-xl overflow-hidden shadow-xl'>
         {/* LEFT */}
-        <div className='w-full lg:w-1/2 p-1 md:px-16 px-20  flex flex-col gap-2 justify-center '>
+        <div className='w-full lg:w-1/2 mx-10 p-1 md:mx-10 flex flex-col gap-2 justify-center'>
           <h2 className='font-bold text-2xl text-[#002D74]'>Register</h2>
           <p className='text-ascent-1 text-base font-semibold'>
             Create your account. It’s free and only take a minute
           </p>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <TextInput
-              name='fullname'
-              placeholder='Fullname'
+            <FloatingLabel
+              controlId='floatingFullname'
               label='Fullname'
-              type='text'
-              register={register('fullname', {
-                required: 'Fullname is required!',
-              })}
-              styles='rounded-md border w-full'
-              labelStyle='ml-2'
-              error={errors.fullname ? errors.fullname.message : ''}
-            />
-            <TextInput
-              name='username'
-              placeholder='Username'
+              className='mb-3'
+            >
+              <Form.Control
+                type='text'
+                placeholder='Fullname'
+                {...register('fullname', {
+                  required: 'Fullname is required!',
+                })}
+                className='rounded-md border w-full'
+              />
+            </FloatingLabel>
+
+            <FloatingLabel
+              controlId='floatingUsername'
               label='Username'
-              type='text'
-              register={register('username', {
-                required: 'Username is required!',
-              })}
-              styles='rounded-md border w-full'
-              labelStyle='ml-2'
-              error={errors.username ? errors.username.message : ''}
-            />
-            <TextInput
-              name='email'
-              placeholder='Email'
+              className='mb-3'
+            >
+              <Form.Control
+                type='text'
+                placeholder='Username'
+                {...register('username', {
+                  required: 'Username is required!',
+                })}
+                className='rounded-md border w-full'
+              />
+            </FloatingLabel>
+
+            <FloatingLabel
+              controlId='floatingEmail'
               label='Email Address'
-              type='email'
-              register={register('email', {
-                required: 'Email Address is required!',
-              })}
-              styles='rounded-md border w-full'
-              labelStyle='ml-2'
-              error={errors.email ? errors.email.message : ''}
-            />
+              className='mb-3'
+            >
+              <Form.Control
+                type='email'
+                placeholder='Email Address'
+                {...register('email', {
+                  required: 'Email Address is required!',
+                })}
+                className='rounded-md border w-full'
+              />
+            </FloatingLabel>
 
             <div className='w-full flex flex-col lg:flex-row gap-1 md:gap-2'>
-              <div className='relative lg:w-[11.3rem] xl:w-[15.3rem]'>
-                <TextInput
-                  name='password'
-                  placeholder='Password'
+              <div className='lg:w-[11.3rem] xl:w-[15.3rem]'>
+                <FloatingLabel
+                  controlId='floatingPassword'
                   label='Password'
-                  type={show ? 'text' : 'password'}
-                  register={register('password', {
-                    required: 'Password is required!',
-                  })}
-                  styles='rounded-md border w-full'
-                  labelStyle='ml-2'
-                  error={errors.password ? errors.password.message : ''}
-                />
-
-                <button
-                  onClick={handleShow}
-                  className=' absolute top-[3.6rem] right-3 -translate-y-1/2 text-ascent-2'
+                  className='mb-3'
                 >
-                  {show ? <BsEyeSlash size={20} /> : <BsEye size={20} />}
-                </button>
+                  <Form.Control
+                    type={show ? 'text' : 'password'}
+                    placeholder='Password'
+                    {...register('password', {
+                      required: 'Password is required!',
+                    })}
+                    className='rounded-md border w-full'
+                  />
+                </FloatingLabel>
               </div>
 
-              <div className='relative lg:w-[11.3rem] xl:w-[15.3rem]'>
-                <TextInput
-                  name='confirm password'
-                  placeholder='Confirm Password'
+              <div className=' lg:w-[11.3rem] xl:w-[15.3rem]'>
+                <FloatingLabel
+                  controlId='floatingConfirmPassword'
                   label='Confirm Password'
-                  type={confirmShow ? 'text' : 'password'}
-                  register={register('confirmPassword', {
-                    validate: (value) => {
-                      const { password } = getValues();
-                      if (password != value) {
-                        return 'Password does not match';
-                      }
-                    },
-                    required: 'Password is required!',
-                  })}
-                  styles='rounded-md border w-full'
-                  labelStyle='ml-2 '
-                  error={
-                    (errors.confirmPassword &&
-                    errors.confirmPassword.type === 'validate'
-                      ? errors.confirmPassword.message
-                      : '') ||
-                    (errors.confirmPassword
-                      ? errors.confirmPassword.message
-                      : '')
-                  }
-                />
-
-                <button
-                  onClick={handleConfirmShow}
-                  className=' absolute top-[3.6rem] right-3 -translate-y-1/2 text-ascent-2'
+                  className='mb-3'
                 >
-                  {confirmShow ? <BsEyeSlash size={20} /> : <BsEye size={20} />}
-                </button>
+                  <Form.Control
+                    type={confirmShow ? 'text' : 'password'}
+                    placeholder='Confirm Password'
+                    {...register('confirmPassword', {
+                      validate: (value) => {
+                        const { password } = getValues();
+                        if (password !== value) {
+                          return 'Password does not match';
+                        }
+                      },
+                      required: 'Password is required!',
+                    })}
+                    className='rounded-md border w-full'
+                  />
+                </FloatingLabel>
               </div>
             </div>
 
             {errMsg?.message && (
               <span
                 className={`text-sm ${
-                  errMsg?.status == 'failed'
+                  errMsg?.status === 'failed'
                     ? 'text-[#f64949fe]'
                     : 'text-[#2ba150fe]'
                 } mt-0.5`}
@@ -211,7 +203,7 @@ const Register = () => {
             pt-3'
             >
               <p className='text-ascent-2'>Already have an account?</p>
-              <Link to='/login'>
+              <Link to='/login' className='text-decoration-none'>
                 <button className='py-2 px-5 bg-white border rounded-md hover:scale-110 duration-300'>
                   Login
                 </button>
@@ -220,14 +212,11 @@ const Register = () => {
           </form>
         </div>
         {/* RIGHT */}
-        <div className='hidden w-1/2 h-full lg:flex flex-col items-center justify-center'>
-          <div className='relative w-full flex items-center justify-center'>
-            <img
-              src='https://e0.pxfuel.com/wallpapers/806/121/desktop-wallpaper-travel-with-air-balloons-iphone-7-lock-screen-iphone-7.jpg'
-              alt='Bg Image'
-              className=' rounded-xl object-cover h-full w-100'
-            />
-          </div>
+        <div className='md:block hidden w-1/2 h-full'>
+          <img
+            className='rounded-xl h-full w-full'
+            src='https://e0.pxfuel.com/wallpapers/806/121/desktop-wallpaper-travel-with-air-balloons-iphone-7-lock-screen-iphone-7.jpg'
+          />
         </div>
       </div>
     </div>
