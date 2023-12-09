@@ -3,12 +3,9 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { BsThreeDots } from 'react-icons/bs';
 import { Button, Dropdown, Space } from 'antd';
-import { MdPublic } from 'react-icons/md';
-import { FaLock, FaUserFriends } from 'react-icons/fa';
 
 const PostHeader = ({ post, user, deletePost, handleUpdate, newData }) => {
-  const isCurrentUserPost = user._id === post.user._id || user.admin || post.user.admin;
-  
+  const isCurrentUserPost = user._id === post.user._id;
 
   const menuItems = [
     {
@@ -23,22 +20,19 @@ const PostHeader = ({ post, user, deletePost, handleUpdate, newData }) => {
       key: 'update',
       onClick: () => handleUpdate(post),
     },
-    isCurrentUserPost  && {
+    isCurrentUserPost && {
       label: 'Delete',
       key: 'delete',
       onClick: () => deletePost(post._id),
     },
   ].filter(Boolean);
 
-  const visibilityIcons = {
-    public: <MdPublic />,
-    private: <FaLock />,
-    friends: <FaUserFriends />,
-  };
-
   return (
     <div className='flex gap-3 items-center mb-2'>
-      <Link to={'/trip/user/' + post.user?._id}>
+      <Link
+        to={'/trip/user/' + post.user?._id}
+        className='text-decoration-none'
+      >
         <img
           src={post.user?.avatar}
           alt={post?.userId?.firstName}
@@ -48,12 +42,12 @@ const PostHeader = ({ post, user, deletePost, handleUpdate, newData }) => {
 
       <div className='w-full flex justify-between'>
         <div>
-          <Link to={'/trip/user/' + post.user?._id}>
-            <p className='font-medium text-lg text-ascent-1 flex gap-3 items-center'>
+          <Link
+            to={'/trip/user/' + post.user?._id}
+            className='text-decoration-none'
+          >
+            <p className='font-medium text-lg text-ascent-1 mb-0'>
               {post.user?.username || post.user}
-              <span className='text-ascent-2'>
-                {visibilityIcons[post.visibility]}
-              </span>
             </p>
           </Link>
           <span className='text-ascent-2'>

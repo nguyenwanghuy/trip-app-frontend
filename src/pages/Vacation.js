@@ -5,14 +5,17 @@ import {
   Loading,
   ProfileCard,
   NavBar,
+  PostForm,
   Weather,
   Ads,
+  CustomButton,
+  PostCard,
 } from '../components';
 import { useForm } from 'react-hook-form';
 import {
   apiRequest,
-  deleteVacation,
   fetchPostsByPage,
+  fetchVacations,
   getUserInfo,
   handleFileUpload,
   sendFriendRequest,
@@ -25,12 +28,11 @@ import SuggestedFriends from '../components/SuggestedFriends';
 import { Card, Pagination } from 'antd';
 import { SetPosts } from '../redux/postSlice';
 import VacationCard from '../components/VacationCard';
-import VacationForm from '../components/Form/VacationForm';
-import UpdateVacationModal from '../components/Modal/UpdateVacationModal';
+import { useParams } from 'react-router-dom';
 
-const Home = () => {
+const Vacation = () => {
   const { user } = useSelector((state) => state.user);
-  const { vacations } = useSelector((state) => state.vacations);
+  const [vacation, setVacation] = useState([]);
   const [friendRequest, setFriendRequest] = useState([]);
   const [suggestedFriends, setSuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState('');
@@ -38,14 +40,13 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [posting, setPosting] = useState(false);
   const [show, setShow] = useState(true);
-  const [selectedVacation, setSelectedVacation] = useState({});
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const { handleLikePost, fetchPost, handleDeletePost, fetchVacation } =
-    UseFunction();
-
+  const { handleLikePost, handleDeletePost } = UseFunction();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const { id } = useParams();
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -61,6 +62,21 @@ const Home = () => {
     formState: { errors },
   } = useForm();
 
+  const fetchVacation = async () => {
+    try {
+      const res = await apiRequest({
+        url: `/vacation/users/${id}`,
+        token: user.token,
+        method: 'GET',
+      });
+      setVacation(res.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFileChange = (e) => {
     const selectedFiles = e.target.files;
     setFile([...file, ...selectedFiles]);
@@ -72,15 +88,7 @@ const Home = () => {
     FRIENDS: 'friends',
   };
   //1
-  const handlePostSubmit = async (
-    data,
-    selectedFriends,
-    participants,
-    visibility,
-    dateStart,
-    dateEnd,
-    milestones,
-  ) => {
+  const handlePostSubmit = async (data, selectedMilestone) => {
     setPosting(true);
     setErrMsg('');
 
@@ -95,21 +103,11 @@ const Home = () => {
       const newData = {
         ...data,
         image: uploadedFiles,
-        visibility:
-          visibility === 'isPrivate'
-            ? PostVisibility.PRIVATE
-            : visibility === 'isPublic'
-            ? PostVisibility.PUBLIC
-            : PostVisibility.FRIENDS,
-        viewers: selectedFriends,
-        dateStart,
-        dateEnd,
-        participants,
-        milestones,
+        milestoneId: selectedMilestone._id,
       };
 
       const res = await apiRequest({
-        url: '/vacation/',
+        url: '/post/',
         token: user?.token,
         data: newData,
         method: 'POST',
@@ -125,8 +123,10 @@ const Home = () => {
         });
         setFile([]);
         setErrMsg('');
-        await fetchVacation();
+        window.location.reload();
       }
+
+      console.log(res);
     } catch (error) {
       console.error('Error submitting post:', error);
       setErrMsg('An error occurred while submitting the post.');
@@ -134,44 +134,29 @@ const Home = () => {
       setPosting(false);
     }
   };
-  const updatePost = async (vacationId, editData) => {
+  const updatePost = async (postId, data) => {
     try {
       const newData = {
-        ...editData,
+        ...data,
       };
 
+      console.log(newData);
+
       const res = await apiRequest({
-        url: `/vacation/${vacationId}`,
+        url: `/post/${postId}`,
         token: user?.token,
         data: newData,
         method: 'PUT',
       });
+      console.log(res);
 
       if (res?.status === 'failed') {
         console.error('Post update failed:', res.message);
       } else {
-        fetchVacation();
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error updating post:', error);
-    }
-  };
-
-  const handleUpdatePost = (vacation) => {
-    console.log(vacation);
-    setSelectedVacation(vacation);
-    setUpdateModalOpen(true);
-  };
-
-  const handleDeleteVacation = async (vacationId) => {
-    try {
-      setLoading(true);
-      await deleteVacation(vacationId, user?.token);
-      await fetchVacation(user?.token, dispatch);
-    } catch (error) {
-      console.error('Error deleting post:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -237,7 +222,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchPost();
     fetchVacation();
     fetchSuggestedRequests();
     handleFriendRequest();
@@ -245,19 +229,6 @@ const Home = () => {
     handleFetchFriendRequest();
     getUser();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await apiRequest({
-        url: `/post?page=${currentPage}&pageSize=${itemsPerPage}`,
-        token: user?.token,
-        method: 'GET',
-      });
-      dispatch(SetPosts(res?.data));
-      setTotalPages(res?.pagination.totalPages);
-    };
-
-    fetchData();
-  }, [currentPage, itemsPerPage, dispatch, setTotalPages, user?.token]);
 
   return (
     <div className='w-full px-5 lg:px-10 2xl:px-20 bg-bgColor lg:rounded-lg h-screen pb-10 overflow-hidden '>
@@ -273,53 +244,61 @@ const Home = () => {
 
         {/* CENTER */}
         <div className='flex-1 h-full px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
-          <VacationForm
-            user={user}
-            handlePostSubmit={handlePostSubmit}
-            handleFileChange={handleFileChange}
-            posting={posting}
-            errMsg={errMsg}
-            setFile={setFile}
-            file={file}
-          />
-
-          {loading ? (
-            <Loading />
-          ) : vacations?.length > 0 ? (
-            <>
-              {vacations
-                .filter((vacation) => vacation?.viewers?.includes(user._id))
-                .map((vacation) => (
-                  <VacationCard
-                    key={vacation?._id}
-                    vacation={vacation}
-                    user={user}
-                    handleUpdate={updatePost}
-                    handleUpdatePost={handleUpdatePost}
-                    deleteVacation={handleDeleteVacation}
-                  />
-                ))}
-
-              <Pagination
-                current={currentPage}
-                total={totalPages * itemsPerPage}
-                onChange={handlePageChange}
-              />
-            </>
-          ) : (
-            <div className='flex w-full h-full items-center justify-center'>
-              <p className='text-lg text-ascent-2'>No Post Available</p>
-            </div>
+          {(vacation.participants?.includes(user?._id) ||
+            user?._id === vacation.user?._id) && (
+            <PostForm
+              user={user}
+              handlePostSubmit={handlePostSubmit}
+              handleFileChange={handleFileChange}
+              posting={posting}
+              errMsg={errMsg}
+              setFile={setFile}
+              file={file}
+              milestones={vacation.milestones}
+            />
           )}
+
+          <div className='bg-first px-4 py-4 rounded-xl'>
+            <div className='text-2xl font-bold'>{vacation.title}</div>
+            <div> {vacation.description}</div>
+            {vacation.startDate} - {vacation.endDate}
+            <div>{vacation.participants}</div>
+          </div>
+          {Array.isArray(vacation.milestones) &&
+            vacation.milestones.map((milestone) => (
+              <div key={milestone._id}>
+                <p>Date: {milestone.date}</p>
+                <p>Description: {milestone.description}</p>
+
+                {Array.isArray(milestone.posts) &&
+                  milestone.posts.map((post) => (
+                    <PostCard
+                      user={user}
+                      key={post._id}
+                      content={post.content}
+                      description={post.description}
+                      date={post.date}
+                      post={post}
+                      vacation={vacation}
+                      likePost={handleLikePost}
+                      fetchVacation={fetchVacation}
+                      updatePost={updatePost}
+                      deletePost={handleDeletePost}
+                    />
+                  ))}
+              </div>
+            ))}
         </div>
 
         {updateModalOpen && (
-          <UpdateVacationModal
+          <UpdatePostModal
             user={user}
             errMsg={errMsg}
-            vacation={selectedVacation}
-            updatePost={updatePost} // Pass the updatePost function
+            post={selectedPost}
+            updatePost={updatePost}
             onClose={() => setUpdateModalOpen(false)}
+            initialFile={selectedPost.image[0]}
+            initialDescription={selectedPost.description}
             setFile={setFile}
             file={file}
           />
@@ -344,4 +323,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Vacation;

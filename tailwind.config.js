@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     colors: {
       bgColor: 'rgb(var(--color-bg) / <alpha-value>)',
-      primary: 'rgb(var(--color-primary) / <alpha-value>)',
-      secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+      first: 'rgb(var(--color-primary) / <alpha-value>)',
+      second: 'rgb(var(--color-secondary) / <alpha-value>)',
       blue: 'rgb(var(--color-blue) / <alpha-value>)',
       white: 'rgb(var(--color-white) / <alpha-value>)',
       ascent: {

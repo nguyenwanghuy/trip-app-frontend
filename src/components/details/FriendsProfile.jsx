@@ -20,13 +20,16 @@ const FriendsProfile = (userInfo) => {
   };
 
   return (
-    <div className='grid grid-cols-2 gap-4 bg-primary rounded-lg px-4 py-4 mt-4 shadow text-ascent-1'>
+    <div className='grid grid-cols-2 gap-4 bg-first rounded-lg px-4 py-4 mt-4 shadow text-ascent-1'>
       {userInfo.userInfo.friends.map((userFriend) => (
         <div
           className='flex items-center justify-between border px-2 py-2 border-[#66666690] rounded-lg'
           key={userFriend._id}
         >
-          <Link to={`/trip/user/${userFriend._id}`}>
+          <Link
+            to={`/trip/user/${userFriend._id}`}
+            className='text-decoration-none'
+          >
             <div className='flex items-center gap-2 px-2 py-2'>
               <img
                 src={userFriend.avatar}

@@ -22,29 +22,29 @@ const ProfileCard = ({ user }) => {
     (user.socialProfiles && Object.keys(user.socialProfiles).length > 0);
   return (
     <div>
-      <div className='w-full bg-primary flex flex-col items-center shadow-sm rounded-xl px-6 py-4 '>
+      <div className='w-full bg-first flex flex-col items-center shadow-sm rounded-xl px-6 py-4 my-0'>
         {/* Header */}
-        <div className='w-full flex items-center justify-between border-b pb-5 border-[#66666645]'>
-          <Link to={'/trip/user/' + user._id} className='flex gap-2'>
+        <div className='w-full flex items-center justify-between border-b pb-3 border-[#66666645] '>
+          <Link
+            to={'/trip/user/' + user._id}
+            className='flex gap-2 text-decoration-none '
+          >
             <img
               src={user.avatar}
               alt={user?.username}
               className='w-14 h-14 object-cover rounded-full'
             />
             <div className='flex flex-col justify-center'>
-              <p className='text-lg font-medium text-ascent-1'>
-                {user.username} 
+              <p className='text-lg font-medium text-ascent-1 my-0'>
+                {user.username}
               </p>
-              {user.userInfo?.profession && (
-                <span className='text-ascent-2'>{user?.profession}</span>
-              )}
             </div>
           </Link>
         </div>
 
         {/* User Details */}
         {hasUserDetails && (
-          <div className='w-full flex flex-col gap-2 py-4 border-b border-[#66666645] '>
+          <div className='w-full flex flex-col gap-2 py-3 border-b border-[#66666645] '>
             {user?.location && (
               <div className='flex gap-2 items-center text-ascent-2'>
                 <CiLocationOn className='text-xl text-ascent-1' />
