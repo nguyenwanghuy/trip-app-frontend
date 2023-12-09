@@ -294,11 +294,11 @@ const Vacation = () => {
           <UpdatePostModal
             user={user}
             errMsg={errMsg}
-            post={selectedPost}
+            // post={selectedPost}
             updatePost={updatePost}
             onClose={() => setUpdateModalOpen(false)}
-            initialFile={selectedPost.image[0]}
-            initialDescription={selectedPost.description}
+            // initialFile={selectedPost.image[0]}
+            // initialDescription={selectedPost.description}
             setFile={setFile}
             file={file}
           />

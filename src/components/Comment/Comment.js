@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { BiLike, BiSolidLike } from 'react-icons/bi';
 import { CommentForm, Loading, ReplyCard } from '../index';
-
+import { io } from 'socket.io-client';
 const Comment = ({
   user,
   post,
@@ -18,12 +18,31 @@ const Comment = ({
   handleLike,
   editComment,
   setEditComment,
+  socket,
+  setSocket,
+  currentComment,
+  setCurrentComment
 }) => {
   const handleEditClick = (comment) => {
     setEditComment(comment);
   };
-
-  // console.log(post);
+  // const [socket, setSocket] = useState(null);
+  // useEffect(() => {
+  //   const socket = io('http://localhost:8001');
+  //   setSocket(socket);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
+  // const [currentComment, setCurrentComment] = useState('');
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on('receive_comment', (data) => {
+  //       console.log('Received comment:', data);
+  //     });
+  //   }
+  // }, [socket]);
+  //tao 1 cai state luu tru tat ca comment, trai mang comment hien tai va tat ca comment, setAllComment
   return (
     <div className='h-full'>
       <div className='w-full border-t border-[#66666645]'>
@@ -33,6 +52,11 @@ const Comment = ({
           getComments={() => getComments(post?._id)}
           editComment={editComment}
           setEditComment={setEditComment}
+          currentComment= {currentComment}
+          setCurrentComment= {setCurrentComment}
+          socket={socket}
+          setSocket={setSocket}
+
         />
 
         {loading ? (

@@ -78,7 +78,7 @@ const VacationCard = ({
               className='text-decoration-none'
             >
               <p className='font-medium text-lg text-ascent-1 mb-0'>
-                {vacation.user?.username || post.user}
+                {vacation.user?.username }
               </p>
             </Link>
             <span className='text-ascent-2'>

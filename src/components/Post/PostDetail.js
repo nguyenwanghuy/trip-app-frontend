@@ -117,7 +117,7 @@ const PostDetail = () => {
                 <Carousel.Item key={index}>
                   <img
                     src={image}
-                    className='d-block mx-auto'
+                    className='d-block mx-auto h-[35rem] object-cover'
                     alt={`Slide ${index + 1}`}
                   />
                 </Carousel.Item>

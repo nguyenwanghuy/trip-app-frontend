@@ -14,6 +14,44 @@ const PostAction = ({
   handleLike,
   fetchVacation,
 }) => {
+  // const [_post, setPost] = useState(post);
+  // const socket = io('http://localhost:8001');
+
+  // useEffect(() => {
+  //   socket.on('like', (data) => {
+  //     setPost((prev) => {
+  //       if (prev && prev._id === data.postId) {
+  //         const likes = prev.likes ?? [];
+
+  //         if (likes.includes(data.from)) {
+  //           return {
+  //             ...prev,
+  //             likes: likes.filter((id) => id !== data.from),
+  //           };
+  //         } else {
+  //           return {
+  //             ...prev,
+  //             likes: [...likes, data.from],
+  //           };
+  //         }
+  //       }
+  //       return prev;
+  //     });
+  //   });
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
+
+  // const userId = user?._id;
+  // const handleLikeClick = async(uri) => {
+  //  await handleLike(uri);
+    // if (userId) {
+    //   const ownerId = _post.user;
+    //   if (ownerId) {
+    //     socket.emit('like', { postId: post._id, from: userId, to: ownerId });
+    //   }
+    // }
   const handleLikeClick = async () => {
     if (vacation.milestones) {
       const likedPost = vacation.milestones
@@ -52,9 +90,7 @@ const PostAction = ({
         <BiComment size={20} />
         {post?.comment?.length} Comments
       </p>
-      <p className='flex gap-2 items-center text-base cursor-pointer'>
-        <IoEyeSharp /> {post.views} view
-      </p>
+      <p>{post.viewCount} view</p>
     </div>
   );
 };
