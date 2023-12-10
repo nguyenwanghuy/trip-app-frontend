@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextInput, Loading, CustomButton } from '../index';
-import { apiRequest } from '../../utils';
+import { apiRequest,handleTokenRefresh } from '../../utils';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { io } from 'socket.io-client';
 import { Input } from 'antd';
@@ -70,7 +70,7 @@ const CommentForm = ({
       // Gửi sự kiện 'send_comment' đến server
       socket.emit('send_comment', newData);
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: URL,
         data: newData,
         token: user?.token,

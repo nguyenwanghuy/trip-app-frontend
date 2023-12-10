@@ -18,6 +18,7 @@ import {
   getUserInfo,
   handleFileUpload,
   sendFriendRequest,
+  handleTokenRefresh
 } from '../utils';
 import UseFunction from '../components/Function/UseFunction';
 import { userLogin } from '../redux/userSlice';
@@ -110,7 +111,7 @@ const Home = () => {
         milestones,
       };
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/vacation/',
         token: user?.token,
         data: newData,
@@ -142,7 +143,7 @@ const Home = () => {
         ...editData,
       };
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/vacation/${vacationId}`,
         token: user?.token,
         data: newData,
@@ -179,7 +180,7 @@ const Home = () => {
 
   const fetchSuggestedRequests = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/user/suggest/u',
         token: user?.token,
         method: 'GET',
@@ -190,11 +191,11 @@ const Home = () => {
       console.log(error);
     }
   };
-
   const handleFriendRequest = async (id) => {
     try {
       const res = await sendFriendRequest(user.token, id);
       await fetchSuggestedRequests();
+      return res.data._id;
     } catch (error) {
       console.error(error);
     }
@@ -202,7 +203,7 @@ const Home = () => {
 
   const handleFetchFriendRequest = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/get-friend-request',
         token: user.token,
         method: 'POST',
@@ -225,7 +226,7 @@ const Home = () => {
 
   const handleAcceptFriendRequest = async (id, status) => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/accept-request',
         token: user.token,
         method: 'POST',
@@ -237,36 +238,7 @@ const Home = () => {
       console.error(error);
     }
   };
-const refreshToken = async() =>{
-  try {
-    const res = await axios.post('/auth/refresh', {
-      withCredentials: true,
-    });
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-  let axiosJWT = axios.create();
-  axiosJWT.interceptors.request.use(
-    async(config) => {
-      let date = new Date()
-      const decodedToken = jwtDecode(user?.token);
-      if(decodedToken.exp < date.getTime()/1000){
-        const data = await refreshToken();
-        const refreshUser = {
-          ...user,
-          token: data.token,
-        };
-        dispatch(userLogin(refreshUser));
-        config.headers["token"] = data.token
-      }
-      return config;
-    },
-    (err)=> {
-      return Promise.reject(err);
-    }
-    )
+
   useEffect(() => {
     fetchPost();
     fetchVacation();
@@ -278,7 +250,7 @@ const refreshToken = async() =>{
   }, []);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post?page=${currentPage}&pageSize=${itemsPerPage}`,
         token: user?.token,
         method: 'GET',

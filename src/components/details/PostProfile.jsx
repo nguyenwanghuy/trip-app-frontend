@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Loading, PostCard, ProfileCard } from '../../components/index';
 import { useParams } from 'react-router-dom';
-import { apiRequest } from '../../utils';
+import { apiRequest,handleTokenRefresh } from '../../utils';
 import InfoProfileCard from '../InfoProfileCard';
 
 const PostProfile = ({ user, UserId, userInfo }) => {
@@ -17,7 +17,7 @@ const PostProfile = ({ user, UserId, userInfo }) => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await apiRequest({
+        const res = await handleTokenRefresh({
           url: `/post/${UserId}`,
           token: user.token,
           method: 'GET',

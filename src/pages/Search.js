@@ -8,6 +8,8 @@ import {
   fetchPosts,
   likePost,
   sendFriendRequest,
+  handleTokenRefresh
+  
 } from '../utils';
 import { useSelector } from 'react-redux';
 
@@ -28,7 +30,7 @@ const Search = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await apiRequest({
+        const res = await handleTokenRefresh({
           url: `/user/search/s?term=${query}`,
           token: user.token,
           method: 'GET',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../../NavBar';
 import { useSelector } from 'react-redux';
 import UseFunction from '../../Function/UseFunction';
-import { apiRequest, handleFileUpload } from '../../../utils';
+import { apiRequest, handleFileUpload,handleTokenRefresh } from '../../../utils';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../TextInput';
 import Loading from '../../Loading';
@@ -96,7 +96,7 @@ const AlbumEdit = () => {
 
       const method = 'PUT';
       const url = `/album/${id}`;
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url,
         token: user?.token,
         data: updatedData,

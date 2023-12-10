@@ -9,6 +9,7 @@ import {
   likeAlbums,
   deleteAlbums,
   fetchVacations,
+  handleTokenRefresh
 } from '../../utils';
 
 const UseFunction = (id) => {
@@ -83,7 +84,7 @@ const UseFunction = (id) => {
   //
   const fetchUserData = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/user/${id}`,
         token: user.token,
         method: 'GET',
