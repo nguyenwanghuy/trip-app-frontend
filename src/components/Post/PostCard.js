@@ -40,7 +40,7 @@ const PostCard = ({
 
   const [socket, setSocket] = useState(null);
   useEffect(() => {
-    const socket = io('https://trip-app-backend.onrender.com');
+    const socket = io('http://localhost:8001');
     setSocket(socket);
     return () => {
       socket.disconnect();
