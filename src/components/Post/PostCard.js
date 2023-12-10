@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { apiRequest, likePost } from '../../utils';
+import { apiRequest, likePost,handleTokenRefresh } from '../../utils';
 import { Comment, PostAction, PostContent, PostHeader } from '../index';
 import UpdatePostModal from '../UpdatePostModal ';
 import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 const getPostComments = async (id, token) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: '/comment/' + id,
       token: token,
       method: 'GET',
@@ -49,12 +49,13 @@ const PostCard = ({
   const [currentComment, setCurrentComment] = useState('');
   useEffect(() => {
     const handleReceiveComment = (data) => {
-      console.log('Received comment:', data);
+      // console.log('Received comment:', data);
+      setComments((prevComments) => [...prevComments, data]);
     };
     if (socket) {
       socket.on('receive_comment', handleReceiveComment);
     }
-  
+
     return () => {
       if (socket) {
         socket.off('receive_comment', handleReceiveComment);
@@ -75,7 +76,7 @@ const PostCard = ({
   };
   const incrementPostViewCount = async (postId) => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post/view/${postId}`,
         token: user.token,
         method: 'POST',
@@ -142,9 +143,9 @@ const PostCard = ({
           handleLike={handleLike}
           editComment={editComment}
           setEditComment={setEditComment}
-          socket ={socket}
-          setSocket= {setSocket}
-          currentComment= {currentComment}
+          socket={socket}
+          setSocket={setSocket}
+          currentComment={currentComment}
           setCurrentComment={setCurrentComment}
         />
       )}

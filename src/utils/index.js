@@ -3,9 +3,8 @@ import { SetPosts } from '../redux/postSlice.js';
 import { SetAlbums } from '../redux/albumSlice.js';
 import { SetVacations } from '../redux/vacationSlice.js';
 import { jwtDecode } from 'jwt-decode';
-// const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
-const API_URL = 'http://localhost:8001/trip' // config
-
+const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
+// const API_URL = 'http://localhost:8001/trip'; // config
 
 export const API = axios.create({
   baseURL: API_URL,
@@ -239,6 +238,48 @@ export const deleteVacation = async (id, token) => {
   }
 };
 
+export const addMilestone = async (token, vacationId, milestoneData) => {
+  try {
+    const res = await handleTokenRefresh({
+      url: `/vacation/milestones/${vacationId}`,
+      token: token,
+      data: milestoneData,
+      method: 'POST',
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Error adding milestone:', error);
+    throw error;
+  }
+};
+
+export const deleteMilestone = async (token, vacationId, milestoneId) => {
+  try {
+    const res = await handleTokenRefresh({
+      url: `/vacation/milestones/${vacationId}/${milestoneId}`,
+      token: token,
+      method: 'DELETE',
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Error deleting milestone:', error);
+    throw error;
+  }
+};
+
+export const likeVacation = async ({ uri, token }) => {
+  try {
+    console.log(uri);
+    const res = await handleTokenRefresh({
+      url: uri,
+      token,
+      method: 'POST',
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 // refresh Token
 export const refreshToken = async () => {
   try {
@@ -250,7 +291,7 @@ export const refreshToken = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     );
     // console.log(res);
     return res.data.token || null;

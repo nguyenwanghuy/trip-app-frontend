@@ -8,7 +8,7 @@ import {
   fetchPosts,
   handleFileUpload,
   likePost,
-  handleTokenRefresh
+  handleTokenRefresh,
 } from '../utils';
 import PostProfile from '../components/details/PostProfile';
 import IntroduceProfile from '../components/details/IntroduceProfile';
@@ -77,7 +77,7 @@ const Profile = () => {
         });
 
         await fetchUserData();
-
+        window.location.reload();
         setFile(null);
       }
     } catch (error) {

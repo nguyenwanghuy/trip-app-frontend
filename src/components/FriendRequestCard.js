@@ -1,44 +1,43 @@
 import React, { useState, useEffect } from 'react';
-  import { Link } from 'react-router-dom';
-  import { CustomButton } from '../components';
-  import { io } from 'socket.io-client';
+import { Link } from 'react-router-dom';
+import { CustomButton } from '../components';
+import { io } from 'socket.io-client';
 import { useSelector } from 'react-redux';
-  const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
-    const [friendPending, setFriendPending] = useState(friendRequest)
-    const { user } = useSelector((state) => state.user);
-    // console.log(friendPending, 'friendPending');
-    // console.log(friendRequest,'friend');
-    useEffect(() => {
-      const socket = io('http://localhost:8001');
-      socket.on('newFriend', (friendReq) => {
-        // console.log('New friend request', friendReq);
-        if (friendReq.idRecipient === user._id) {
-          setFriendPending((prevFriend) => [...prevFriend, friendReq]);
-        }
-      });
-      return () => {
-        socket.disconnect();
-      };
-    }, [friendRequest, user._id]);
-    // console.log(friendPending);
-    const handleAccept = (idReq) => {
-      setFriendPending((prevFriend) =>
-        prevFriend.filter((friend) => friend.idReq !== idReq)
-      );
-      handleAcceptFriendRequest(idReq);
+const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
+  const [friendPending, setFriendPending] = useState(friendRequest);
+  const { user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const socket = io('http://localhost:8001');
+    socket.on('newFriend', (friendReq) => {
+      if (friendReq.idRecipient === user._id) {
+        setFriendPending((prevFriend) => [...prevFriend, friendReq]);
+      }
+    });
+    return () => {
+      socket.disconnect();
     };
-    return (
-      <div className='w-full bg-primary shadow-sm rounded-lg px-6 py-5'>
-        <div className='flex items-center justify-between text-xl text-ascent-1 pb-2 border-b border-[#66666645]'>
-          <span> Friend Request</span>
-          <span>{friendPending?.length}</span>
-        </div>
-        <div className='w-full flex flex-col gap-4 pt-4'>
-          {friendPending?.map(({ idRecipient,idReq, requestFrom ,avatar,username }) => (
+  }, [friendRequest, user._id]);
+  // console.log(friendPending);
+  const handleAccept = (idReq) => {
+    setFriendPending((prevFriend) =>
+      prevFriend.filter((friend) => friend.idReq !== idReq),
+    );
+    handleAcceptFriendRequest(idReq);
+  };
+  return (
+    <div className='w-full bg-first shadow-sm rounded-lg px-6 py-3'>
+      <div className='flex items-center justify-between text-xl text-ascent-1 pb-2 border-b border-[#66666645]'>
+        <span> Friend Request</span>
+        <span>{friendPending?.length}</span>
+      </div>
+      <div className='w-full flex flex-col gap-4 pt-4'>
+        {friendPending?.map(
+          ({ idRecipient, idReq, requestFrom, avatar, username }) => (
             <div key={idReq} className='flex items-center justify-between'>
               <Link
-                to={'/trip/user/' + requestFrom }
-                className='w-full flex gap-4 items-center cursor-pointer'
+                to={'/trip/user/' + requestFrom}
+                className='w-full flex gap-4 items-center cursor-pointer text-decoration-none'
               >
                 <img
                   src={avatar}
@@ -65,11 +64,11 @@ import { useSelector } from 'react-redux';
                 />
               </div>
             </div>
-          ))}
-        </div>
+          ),
+        )}
       </div>
-    );
-  };
+    </div>
+  );
+};
 
-  export default FriendRequests;
-
+export default FriendRequests;

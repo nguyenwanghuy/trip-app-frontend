@@ -21,7 +21,7 @@ const AlbumPost = () => {
   const [posting, setPosting] = useState(false);
   const [visibility, setVisibility] = useState('public');
   const [selectedFriends, setSelectedFriends] = useState([]);
-  console.log(selectedFriends);
+  // console.log(selectedFriends);
 
   const { handleLikePost, fetchAlbums, handleDeletePost } = UseFunction();
 
@@ -69,13 +69,13 @@ const AlbumPost = () => {
       const newData = {
         ...data,
         images: uploadedFiles.map((url, index) => ({
-          url: url[0],
+          url: url,
           description: descriptions[index],
         })),
         visibility,
         viewers: selectedFriends,
       };
-      console.log(newData);
+      // console.log(newData);
 
       const res = await handleTokenRefresh({
         url: '/album',
@@ -84,7 +84,7 @@ const AlbumPost = () => {
         method: 'POST',
       });
 
-      console.log(res);
+      // console.log(res);
 
       if (res?.status === 'failed') {
         setErrMsg(res.message);

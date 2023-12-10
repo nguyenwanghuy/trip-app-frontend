@@ -125,15 +125,17 @@ const UpdatePostModal = ({
               {errors.description.message}
             </span>
           )}
-          <ReactQuill
-            theme='snow'
+          <textarea
+            className='w-full h-20 mb-11 p-2 border border-ascent-2 rounded-md'
+            placeholder='Write your content...'
+            {...register('content', {
+              required: 'Content is required',
+            })}
             value={content}
-            onChange={(value) => {
-              setValue('content', value);
-              setContent(value);
+            onChange={(e) => {
+              setValue('content', e.target.value);
+              setContent(e.target.value);
             }}
-            name='content'
-            className='h-20 mb-11'
           />
         </div>
       </form>

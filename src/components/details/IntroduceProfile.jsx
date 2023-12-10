@@ -96,7 +96,7 @@ const IntroduceProfile = ({ userInfo, fetchUserData }) => {
     setIsModalVisible(false);
   };
   //format day
-  const formatDateOfBirth = moment(userInfo.dateOfBirth).format('DD-MM-YYYY');
+  const formatDateOfBirth = moment(user.dateOfBirth).format('DD-MM-YYYY');
   // console.log(userInfo);
   return (
     <div className='bg-first px-4 py-1 rounded-md shadow-lg'>

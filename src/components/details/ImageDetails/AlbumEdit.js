@@ -24,7 +24,7 @@ const AlbumEdit = () => {
   const [fileToDelete, setFileToDelete] = useState([]);
   const location = useLocation();
   const existingData = location.state?.existingData;
-  console.log(file);
+  // console.log(file);
 
   const {
     register,
