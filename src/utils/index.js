@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { SetPosts } from '../redux/postSlice.js';
 import { SetAlbums } from '../redux/albumSlice.js';
-import axiosJWT from '../pages/Home.js'
 import { SetVacations } from '../redux/vacationSlice.js';
-
+import { jwtDecode } from 'jwt-decode';
 // const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
 const API_URL = 'http://localhost:8001/trip' // config
 
@@ -26,13 +25,12 @@ export const apiRequest = async ({ url, token, data, method }) => {
         'Content-Type': 'application/json',
       },
     });
-
+    console.log(result);
     return result.data;
   } catch (error) {
     console.log(error);
   }
 };
-
 export const handleFileUpload = async (uploadFile) => {
   try {
     const formData = new FormData();
@@ -77,11 +75,9 @@ export const handleAvatarUpload = async ({ file, token }) => {
     return null;
   }
 };
-//giong post
-
 export const fetchPosts = async (token, dispatch, uri, data) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: uri || '/post',
       token,
       method: 'GET',
@@ -93,10 +89,9 @@ export const fetchPosts = async (token, dispatch, uri, data) => {
     console.log(error);
   }
 };
-
 export const fetchPostsByPage = async (token, dispatch, page, pageSize) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: `/post?page=${page}&pageSize=${pageSize}`,
       token,
       method: 'GET',
@@ -110,11 +105,10 @@ export const fetchPostsByPage = async (token, dispatch, page, pageSize) => {
     console.log(error);
   }
 };
-
 export const likePost = async ({ uri, token }) => {
   try {
     console.log(uri);
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: uri,
       token,
       method: 'POST',
@@ -124,10 +118,9 @@ export const likePost = async ({ uri, token }) => {
     console.log(error);
   }
 };
-
 export const deletePost = async (id, token) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: '/post/' + id,
       token,
       method: 'DELETE',
@@ -137,10 +130,9 @@ export const deletePost = async (id, token) => {
     console.log(error);
   }
 };
-//end
 export const getUserInfo = async (token) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: 'auth/me',
       token: token,
       method: 'GET',
@@ -155,10 +147,9 @@ export const getUserInfo = async (token) => {
     console.log(error);
   }
 };
-
 export const searchUser = async (token, query) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: `/user/search/s?u=${query}`,
       token,
       method: 'GET',
@@ -169,24 +160,22 @@ export const searchUser = async (token, query) => {
     throw error;
   }
 };
-
 export const sendFriendRequest = async (token, id) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: `/test/friend-request`,
       token: token,
       method: 'POST',
       data: { requestTo: id },
     });
-    return;
+    return res;
   } catch (error) {
     console.log(error);
   }
 };
-
 export const fetchAlbums = async (token, dispatch, uri, data) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: uri || '/album',
       token,
       method: 'GET',
@@ -198,10 +187,9 @@ export const fetchAlbums = async (token, dispatch, uri, data) => {
     console.log(error);
   }
 };
-
 export const likeAlbums = async ({ uri, token }) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: uri,
       token,
       method: 'POST',
@@ -211,10 +199,9 @@ export const likeAlbums = async ({ uri, token }) => {
     console.log(error);
   }
 };
-
 export const deleteAlbums = async (id, token) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: '/album/' + id,
       token,
       method: 'DELETE',
@@ -224,25 +211,24 @@ export const deleteAlbums = async (id, token) => {
     console.log(error);
   }
 };
-
 export const fetchVacations = async (token, dispatch, uri, data) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: uri || '/vacation',
       token,
       method: 'GET',
       data: data || {},
     });
+    console.log(res);
     dispatch(SetVacations(res?.data));
     return;
   } catch (error) {
     console.log(error);
   }
 };
-
 export const deleteVacation = async (id, token) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: '/vacation/' + id,
       token,
       method: 'DELETE',
@@ -250,5 +236,54 @@ export const deleteVacation = async (id, token) => {
     return;
   } catch (error) {
     console.log(error);
+  }
+};
+
+// refresh Token
+export const refreshToken = async () => {
+  try {
+    const res = await axios.post(
+      'http://localhost:8001/trip/auth/refresh',
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    // console.log(res);
+    return res.data.token || null;
+  } catch (error) {
+    console.error('Error refreshing access token:', error);
+    throw error;
+  }
+};
+export const handleTokenRefresh = async (requestConfig) => {
+  try {
+    const { url, token, ...rest } = requestConfig;
+    console.log(requestConfig);
+    let date = new Date();
+    const decodedToken = jwtDecode(token);
+
+    if (decodedToken.exp < date.getTime() / 1000) {
+      const newToken = await refreshToken();
+      // console.log(newToken, 'new token');
+
+      if (newToken) {
+        const newRequestConfig = { ...requestConfig, token: newToken };
+        return apiRequest({ url, ...newRequestConfig });
+      } else {
+        // localStorage.removeItem('user');
+        // window.location.replace('/login');
+        // throw new Error('Invalid token');
+        console.log('error: Invalid token');
+      }
+    }
+
+    return apiRequest({ url, token, ...rest });
+  } catch (error) {
+    console.error('Error handling token refresh:', error);
+    throw error;
   }
 };

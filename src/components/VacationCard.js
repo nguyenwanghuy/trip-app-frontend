@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiRequest } from '../utils';
+import { apiRequest,handleTokenRefresh } from '../utils';
 import PostContent from './Post/PostContent';
 import PostImage from './Post/PostImage';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import { Dropdown, Space } from 'antd';
 
 const getPostComments = async (id, token) => {
   try {
-    const res = await apiRequest({
+    const res = await handleTokenRefresh({
       url: '/comment/' + id,
       token: token,
       method: 'GET',

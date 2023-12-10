@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../../NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import UseFunction from '../../Function/UseFunction';
-import { apiRequest, fetchAlbums, handleFileUpload } from '../../../utils';
+import { apiRequest, fetchAlbums, handleFileUpload,handleTokenRefresh } from '../../../utils';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../TextInput';
 import Loading from '../../Loading';
@@ -77,7 +77,7 @@ const AlbumPost = () => {
       };
       console.log(newData);
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/album',
         token: user?.token,
         data: newData,

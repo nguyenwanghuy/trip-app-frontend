@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { apiRequest } from '../../../utils';
+import { apiRequest,handleTokenRefresh } from '../../../utils';
 import { useSelector } from 'react-redux';
 import { BsThreeDots } from 'react-icons/bs';
 import { Button, Dropdown, Space } from 'antd';
@@ -15,7 +15,7 @@ const AlbumInfo = ({ selectedAlbum, handleAlbumSubmit }) => {
 
   const fetchAlbum = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/album/users/${selectedAlbum}`,
         token: user.token,
         method: 'GET',

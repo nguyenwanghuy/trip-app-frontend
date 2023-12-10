@@ -8,6 +8,7 @@ import {
   fetchPosts,
   handleFileUpload,
   likePost,
+  handleTokenRefresh
 } from '../utils';
 import PostProfile from '../components/details/PostProfile';
 import IntroduceProfile from '../components/details/IntroduceProfile';
@@ -30,7 +31,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/user/${id}`,
         token: user.token,
         method: 'GET',
@@ -68,7 +69,7 @@ const Profile = () => {
 
         const uri = await handleFileUpload(file);
 
-        await apiRequest({
+        await handleTokenRefresh({
           url: `/user/upload-avatar`,
           token: user.token,
           method: 'PUT',

@@ -19,6 +19,7 @@ import {
   getUserInfo,
   handleFileUpload,
   sendFriendRequest,
+  handleTokenRefresh
 } from '../utils';
 import UseFunction from '../components/Function/UseFunction';
 import { userLogin } from '../redux/userSlice';
@@ -64,7 +65,7 @@ const Vacation = () => {
 
   const fetchVacation = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/vacation/users/${id}`,
         token: user.token,
         method: 'GET',
@@ -106,7 +107,7 @@ const Vacation = () => {
         milestoneId: selectedMilestone._id,
       };
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/post/',
         token: user?.token,
         data: newData,
@@ -142,7 +143,7 @@ const Vacation = () => {
 
       console.log(newData);
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post/${postId}`,
         token: user?.token,
         data: newData,
@@ -162,7 +163,7 @@ const Vacation = () => {
 
   const fetchSuggestedRequests = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/user/suggest/u',
         token: user?.token,
         method: 'GET',
@@ -185,7 +186,7 @@ const Vacation = () => {
 
   const handleFetchFriendRequest = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/get-friend-request',
         token: user.token,
         method: 'POST',
@@ -208,7 +209,7 @@ const Vacation = () => {
 
   const handleAcceptFriendRequest = async (id, status) => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/accept-request',
         token: user.token,
         method: 'POST',

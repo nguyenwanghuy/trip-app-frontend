@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiRequest, likePost } from '../../utils';
+import { apiRequest, likePost,handleTokenRefresh } from '../../utils';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -26,7 +26,7 @@ const PostDetail = () => {
 
   const getPostComments = async (id, token) => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/comment/' + id,
         token: token,
         method: 'GET',
@@ -54,7 +54,7 @@ const PostDetail = () => {
 
   const fetchPost = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post/users/${id}`,
         token: user.token,
         method: 'GET',

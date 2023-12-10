@@ -3,7 +3,7 @@ import { Row, Col, Card, Spin, Tabs } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import UseFunction from '../Function/UseFunction';
 import { useSelector } from 'react-redux';
-import { apiRequest } from '../../utils';
+import { apiRequest ,handleTokenRefresh} from '../../utils';
 import Loading from '../Loading';
 import AlbumInfo from './ImageDetails/AlbumInfo';
 
@@ -25,7 +25,7 @@ const ImagesProfile = ({ UserId, userInfo }) => {
 
   const fetchPosts = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post/${UserId}`,
         token: user.token,
         method: 'GET',
