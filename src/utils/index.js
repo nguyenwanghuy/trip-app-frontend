@@ -3,8 +3,8 @@ import { SetPosts } from '../redux/postSlice.js';
 import { SetAlbums } from '../redux/albumSlice.js';
 import { SetVacations } from '../redux/vacationSlice.js';
 import { jwtDecode } from 'jwt-decode';
-const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
-// const API_URL = 'http://localhost:8001/trip'; // config
+// const API_URL = 'https://trip-app-backend.onrender.com/trip'; // deploy
+const API_URL = 'http://localhost:8001/trip'; // config
 
 export const API = axios.create({
   baseURL: API_URL,
