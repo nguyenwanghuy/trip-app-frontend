@@ -8,7 +8,7 @@ const FriendRequests = ({ friendRequest, handleAcceptFriendRequest }) => {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const socket = io('http://localhost:8001');
+    const socket = io('https://trip-app-backend.onrender.com/trip');
     socket.on('newFriend', (friendReq) => {
       if (friendReq.idRecipient === user._id) {
         setFriendPending((prevFriend) => [...prevFriend, friendReq]);
