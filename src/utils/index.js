@@ -284,7 +284,7 @@ export const likeVacation = async ({ uri, token }) => {
 export const refreshToken = async () => {
   try {
     const res = await axios.post(
-      'https://trip-app-backend.onrender.com/trip/auth/refresh',
+      "https://trip-app-backend.onrender.com/trip/auth/refresh",
       {},
       {
         withCredentials: true,
