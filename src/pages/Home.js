@@ -42,13 +42,18 @@ const Home = () => {
   const [show, setShow] = useState(true);
   const [selectedVacation, setSelectedVacation] = useState({});
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const { handleLikePost, fetchPost, handleDeletePost, fetchVacation } =
-    UseFunction();
+  const {
+    handleLikePost,
+    fetchPost,
+    handleDeletePost,
+    fetchVacation,
+    handleLikeVacation,
+  } = UseFunction();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-// console.log(posts);
+  // console.log(posts);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     fetchPostsByPage(user?.token, dispatch, newPage, itemsPerPage);
@@ -74,7 +79,7 @@ const Home = () => {
     FRIENDS: 'friends',
   };
   //1
-  const handlePostSubmit = async (
+  const handleVacationSubmit = async (
     data,
     selectedFriends,
     participants,
@@ -110,12 +115,16 @@ const Home = () => {
         milestones,
       };
 
+      console.log(newData);
+
       const res = await apiRequest({
         url: '/vacation/',
         token: user?.token,
         data: newData,
         method: 'POST',
       });
+
+      console.log(res);
 
       if (res?.status === 'failed') {
         setErrMsg(res.message);
@@ -237,36 +246,36 @@ const Home = () => {
       console.error(error);
     }
   };
-const refreshToken = async() =>{
-  try {
-    const res = await axios.post('/auth/refresh', {
-      withCredentials: true,
-    });
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
+  const refreshToken = async () => {
+    try {
+      const res = await axios.post('/auth/refresh', {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   let axiosJWT = axios.create();
   axiosJWT.interceptors.request.use(
-    async(config) => {
-      let date = new Date()
+    async (config) => {
+      let date = new Date();
       const decodedToken = jwtDecode(user?.token);
-      if(decodedToken.exp < date.getTime()/1000){
+      if (decodedToken.exp < date.getTime() / 1000) {
         const data = await refreshToken();
         const refreshUser = {
           ...user,
           token: data.token,
         };
         dispatch(userLogin(refreshUser));
-        config.headers["token"] = data.token
+        config.headers['token'] = data.token;
       }
       return config;
     },
-    (err)=> {
+    (err) => {
       return Promise.reject(err);
-    }
-    )
+    },
+  );
   useEffect(() => {
     fetchPost();
     fetchVacation();
@@ -306,7 +315,7 @@ const refreshToken = async() =>{
         <div className='flex-1 h-full px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
           <VacationForm
             user={user}
-            handlePostSubmit={handlePostSubmit}
+            handleVacationSubmit={handleVacationSubmit}
             handleFileChange={handleFileChange}
             posting={posting}
             errMsg={errMsg}
@@ -328,14 +337,9 @@ const refreshToken = async() =>{
                     handleUpdate={updatePost}
                     handleUpdatePost={handleUpdatePost}
                     deleteVacation={handleDeleteVacation}
+                    likeVacation={handleLikeVacation}
                   />
                 ))}
-
-              <Pagination
-                current={currentPage}
-                total={totalPages * itemsPerPage}
-                onChange={handlePageChange}
-              />
             </>
           ) : (
             <div className='flex w-full h-full items-center justify-center'>
@@ -349,7 +353,7 @@ const refreshToken = async() =>{
             user={user}
             errMsg={errMsg}
             vacation={selectedVacation}
-            updatePost={updatePost} // Pass the updatePost function
+            updatePost={updatePost}
             onClose={() => setUpdateModalOpen(false)}
             setFile={setFile}
             file={file}

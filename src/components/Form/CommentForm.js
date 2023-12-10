@@ -11,13 +11,12 @@ const CommentForm = ({
   id,
   replyAt,
   getComments,
-  editComment,  
+  editComment,
   setEditComment,
   currentComment,
   setCurrentComment,
   socket,
-  setSocket
-
+  setSocket,
 }) => {
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState('');
@@ -63,7 +62,7 @@ const CommentForm = ({
       const newData = {
         description: currentComment,
         from: user.username,
-        avatar:user.avatar,
+        avatar: user.avatar,
         replyAt: replyAt,
       };
 
@@ -100,7 +99,7 @@ const CommentForm = ({
   //   if (socket) {
   //     socket.on('receive_comment', (data) => {
   //       console.log('Received comment:', data);
-    
+
   //     });
   //   }
   // }, [socket]);

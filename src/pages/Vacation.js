@@ -13,7 +13,9 @@ import {
 } from '../components';
 import { useForm } from 'react-hook-form';
 import {
+  addMilestone,
   apiRequest,
+  deleteMilestone,
   fetchPostsByPage,
   fetchVacations,
   getUserInfo,
@@ -25,10 +27,11 @@ import { userLogin } from '../redux/userSlice';
 import UpdatePostModal from '../components/UpdatePostModal ';
 import FriendRequests from '../components/FriendRequestCard';
 import SuggestedFriends from '../components/SuggestedFriends';
-import { Card, Pagination } from 'antd';
-import { SetPosts } from '../redux/postSlice';
-import VacationCard from '../components/VacationCard';
+import moment from 'moment';
 import { useParams } from 'react-router-dom';
+import { MdDelete } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Vacation = () => {
   const { user } = useSelector((state) => state.user);
@@ -69,6 +72,10 @@ const Vacation = () => {
         token: user.token,
         method: 'GET',
       });
+      res.data.milestones.sort(
+        (a, b) => moment(a.date).valueOf() - moment(b.date).valueOf(),
+      );
+
       setVacation(res.data);
     } catch (error) {
       console.error(error);
@@ -80,6 +87,44 @@ const Vacation = () => {
   const handleFileChange = (e) => {
     const selectedFiles = e.target.files;
     setFile([...file, ...selectedFiles]);
+  };
+
+  const handleAddMilestone = async (milestoneData) => {
+    try {
+      const newMilestone = await addMilestone(
+        user.token,
+        vacation._id,
+        milestoneData,
+      );
+      setVacation((prevVacation) => ({
+        ...prevVacation,
+        milestones: [...prevVacation.milestones, newMilestone],
+      }));
+    } catch (error) {
+      console.error('Error handling add milestone:', error);
+    }
+  };
+
+  const handleDeleteMilestone = async (milestoneId) => {
+    try {
+      await deleteMilestone(user.token, vacation._id, milestoneId);
+      toast.success('Milestone deleted successfully');
+      setVacation((prevVacation) => ({
+        ...prevVacation,
+        milestones: prevVacation.milestones.filter(
+          (milestone) => milestone._id !== milestoneId,
+        ),
+      }));
+    } catch (error) {
+      console.error('Error handling delete milestone:', error);
+      toast.error('Error deleting milestone');
+    }
+  };
+
+  const confirmDeleteMilestone = (milestoneId) => {
+    if (window.confirm('Are you sure you want to delete this milestone?')) {
+      handleDeleteMilestone(milestoneId);
+    }
   };
 
   const PostVisibility = {
@@ -221,6 +266,10 @@ const Vacation = () => {
     }
   };
 
+  const handleOpenDeleteMilestoneModal = (milestoneId) => {
+    handleDeleteMilestone(milestoneId);
+  };
+
   useEffect(() => {
     fetchVacation();
     fetchSuggestedRequests();
@@ -255,20 +304,43 @@ const Vacation = () => {
               setFile={setFile}
               file={file}
               milestones={vacation.milestones}
+              startDate={vacation.startDate}
+              endDate={vacation.endDate}
             />
           )}
 
-          <div className='bg-first px-4 py-4 rounded-xl'>
+          <div className='bg-first px-4 py-4 rounded-xl text-ascent-1'>
             <div className='text-2xl font-bold'>{vacation.title}</div>
-            <div> {vacation.description}</div>
-            {vacation.startDate} - {vacation.endDate}
-            <div>{vacation.participants}</div>
+            <div>{vacation.description}</div>
+            <div>
+              {moment(vacation.startDate).format('DD/MM/YYYY')} -
+              {moment(vacation.endDate).format('DD/MM/YYYY')}
+            </div>
+            <div>Participants: {vacation.participants?.length}</div>
           </div>
           {Array.isArray(vacation.milestones) &&
             vacation.milestones.map((milestone) => (
-              <div key={milestone._id}>
-                <p>Date: {milestone.date}</p>
-                <p>Description: {milestone.description}</p>
+              <div>
+                <div
+                  key={milestone._id}
+                  className='text-ascent-1 grid grid-cols-3 items-center py-4'
+                >
+                  <hr className='text-ascent-1 ' />
+                  <div className='text-center'>
+                    <p className='text-2xl flex font-bold my-0 items-center justify-center gap-2'>
+                      {moment(milestone.date).format('DD/MM/YYYY')}
+                      {user._id == vacation.user._id && (
+                        <button
+                          onClick={() => confirmDeleteMilestone(milestone._id)}
+                        >
+                          <MdDelete className='h-4' />
+                        </button>
+                      )}
+                    </p>
+                    <p> {milestone.description}</p>
+                  </div>
+                  <hr className='text-ascent-1' />
+                </div>
 
                 {Array.isArray(milestone.posts) &&
                   milestone.posts.map((post) => (

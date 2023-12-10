@@ -46,12 +46,12 @@ const PostAction = ({
   // const userId = user?._id;
   // const handleLikeClick = async(uri) => {
   //  await handleLike(uri);
-    // if (userId) {
-    //   const ownerId = _post.user;
-    //   if (ownerId) {
-    //     socket.emit('like', { postId: post._id, from: userId, to: ownerId });
-    //   }
-    // }
+  // if (userId) {
+  //   const ownerId = _post.user;
+  //   if (ownerId) {
+  //     socket.emit('like', { postId: post._id, from: userId, to: ownerId });
+  //   }
+  // }
   const handleLikeClick = async () => {
     if (vacation.milestones) {
       const likedPost = vacation.milestones

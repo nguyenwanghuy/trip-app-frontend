@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiRequest } from '../utils';
-import PostContent from './Post/PostContent';
+import { apiRequest, likeVacation } from '../utils';
 import PostImage from './Post/PostImage';
 import moment from 'moment';
 import { BsThreeDots } from 'react-icons/bs';
 import { Dropdown, Space } from 'antd';
+import { MdLockPerson, MdPublic } from 'react-icons/md';
+import { FaUserFriends } from 'react-icons/fa';
+import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi';
 
-const getPostComments = async (id, token) => {
-  try {
-    const res = await apiRequest({
-      url: '/comment/' + id,
-      token: token,
-      method: 'GET',
-    });
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// const getPostComments = async (id, token) => {
+//   try {
+//     const res = await apiRequest({
+//       url: '/comment/' + id,
+//       token: token,
+//       method: 'GET',
+//     });
+//     return res.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const VacationCard = ({
   vacation,
@@ -27,6 +29,7 @@ const VacationCard = ({
   id,
   deleteVacation,
   handleUpdatePost,
+  likeVacation,
 }) => {
   const [showAll, setShowAll] = useState(0);
 
@@ -42,7 +45,24 @@ const VacationCard = ({
   //   }
   // };
 
-  const isCurrentUserPost = user._id === vacation.user._id;
+  const getVisibilityIcon = () => {
+    switch (vacation.visibility) {
+      case 'private':
+        return <MdLockPerson />;
+      case 'public':
+        return <MdPublic />;
+      case 'friends':
+        return <FaUserFriends />;
+      default:
+        return null;
+    }
+  };
+
+  const handleLike = async (uri) => {
+    await likeVacation(uri);
+  };
+
+  const isCurrentUserPost = user?._id === vacation.user?._id;
 
   const menuItems = [
     isCurrentUserPost && {
@@ -60,10 +80,7 @@ const VacationCard = ({
   return (
     <div className='bg-first px-4 pt-4 rounded-xl'>
       <div className='flex gap-3 items-center mb-2'>
-        <Link
-          to={'/trip/user/' + vacation.user?._id}
-          className='text-decoration-none'
-        >
+        <Link to={'/trip/user/' + vacation.user?._id}>
           <img
             src={vacation.user?.avatar}
             alt={vacation?.userId?.firstName}
@@ -77,9 +94,10 @@ const VacationCard = ({
               to={'/trip/user/' + vacation.user?._id}
               className='text-decoration-none'
             >
-              <p className='font-medium text-lg text-ascent-1 mb-0'>
-                {vacation.user?.username }
-              </p>
+              <div className='font-medium text-lg flex text-ascent-1 mb-0 gap-2 items-center'>
+                <span>{vacation.user?.username}</span>
+                <span>{getVisibilityIcon()}</span>
+              </div>
             </Link>
             <span className='text-ascent-2'>
               {moment(vacation?.createdAt ?? Date.now()).fromNow()}
@@ -101,7 +119,10 @@ const VacationCard = ({
         </div>
       </div>
 
-      <Link to={`/trip/vacation/${vacation._id}`} className='text-ascent-2'>
+      <Link
+        to={`/trip/vacation/${vacation._id}`}
+        className='text-ascent-2 text-decoration-none'
+      >
         <PostImage post={vacation} />
         <div className='font-bold text-left'>{vacation.title}</div>
         <div className='font-bold text-left'>
@@ -127,37 +148,30 @@ const VacationCard = ({
             ))}
         </div>
         <div>
-          <div>Date start: {vacation.startDate}</div>
-          <div>Date end: {vacation.endDate}</div>
+          <div>
+            Date start: {moment(vacation.startDate).format('DD-MM-YYYY')}
+          </div>
+          <div>Date end: {moment(vacation.endDate).format('DD-MM-YYYY')}</div>
           <div>Location: {vacation.location}</div>
+          <div>Participants: {vacation.participants?.length}</div>
         </div>
       </Link>
 
-      {/* <PostAction
-        user={user}
-        post={post}
-        showComments={showComments}
-        setShowComments={setShowComments}
-        getComments={getComments}
-        handleLike={handleLike}
-      />
-      {showComments === post._id && (
-        <Comment
-          user={user}
-          post={post}
-          loading={loading}
-          getComments={getComments}
-          showComments={showComments}
-          comments={comments}
-          setReplyComments={setReplyComments}
-          replyComments={replyComments}
-          setShowReply={setShowReply}
-          showReply={showReply}
-          handleLike={handleLike}
-          editComment={editComment}
-          setEditComment={setEditComment}
-        />
-      )} */}
+      <div className='mt-4 flex justify-between items-center px-3 pt-2 text-ascent-2 text-base border-t border-[#66666645] mb-0 pb-0'>
+        <p
+          className='flex gap-2 items-center text-base cursor-pointer'
+          onClick={() => handleLike('vacation/like/' + vacation._id)}
+        >
+          {vacation.likes.includes(user?._id) ? (
+            <BiSolidLike size={20} color='blue' />
+          ) : (
+            <BiLike size={20} />
+          )}
+          {vacation.likes.length} Likes
+        </p>
+
+        <p> view</p>
+      </div>
     </div>
   );
 };

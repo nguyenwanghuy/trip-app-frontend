@@ -49,12 +49,13 @@ const PostCard = ({
   const [currentComment, setCurrentComment] = useState('');
   useEffect(() => {
     const handleReceiveComment = (data) => {
-      console.log('Received comment:', data);
+      // console.log('Received comment:', data);
+      setComments((prevComments) => [...prevComments, data]);
     };
     if (socket) {
       socket.on('receive_comment', handleReceiveComment);
     }
-  
+
     return () => {
       if (socket) {
         socket.off('receive_comment', handleReceiveComment);
@@ -142,9 +143,9 @@ const PostCard = ({
           handleLike={handleLike}
           editComment={editComment}
           setEditComment={setEditComment}
-          socket ={socket}
-          setSocket= {setSocket}
-          currentComment= {currentComment}
+          socket={socket}
+          setSocket={setSocket}
+          currentComment={currentComment}
           setCurrentComment={setCurrentComment}
         />
       )}

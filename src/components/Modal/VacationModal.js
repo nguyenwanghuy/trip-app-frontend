@@ -10,7 +10,7 @@ import Form from 'react-bootstrap/Form';
 // import { Option } from 'antd/es/mentions';
 
 const VacationModal = ({
-  handlePostSubmit,
+  handleVacationSubmit,
   handleFileChange,
   errMsg,
   setFile,
@@ -82,7 +82,7 @@ const VacationModal = ({
     setConfirmLoading(true);
     try {
       const data = await handleSubmit((formData) => {
-        handlePostSubmit(
+        handleVacationSubmit(
           formData,
           selectedFriends,
           participants,
@@ -122,7 +122,7 @@ const VacationModal = ({
         onClick={showModal}
         className='border-none bg-[#F2F3F5] w-full h-[3rem] text-left'
       >
-        Share your experience!
+        Share your vacations!
       </Button>
       <Modal
         title='Share your experience'
@@ -140,7 +140,7 @@ const VacationModal = ({
       >
         <>
           <form
-            onSubmit={handleSubmit(handlePostSubmit)}
+            onSubmit={handleSubmit(handleVacationSubmit)}
             className='bg-first px-4 rounded-lg '
           >
             <div className='w-full items-center gap-2 py-4'>
@@ -195,7 +195,7 @@ const VacationModal = ({
                       });
                       setStartDate(e.target.value);
                     }}
-                    className='w-full py-3 px-2 rounded-md mt-2 border border-ascent-2'
+                    className='w-full px-2 rounded-md mt-2 border border-ascent-2'
                   />
 
                   <input
@@ -214,20 +214,14 @@ const VacationModal = ({
                   />
                 </div>
 
-                <FloatingLabel
-                  controlId='floatingLocation'
-                  label='Location'
-                  className='mt-2 py-0'
-                >
-                  <Form.Control
-                    type='text'
-                    placeholder='Location'
-                    {...register('location', {
-                      required: 'Location is required!',
-                    })}
-                    className='rounded-md border w-full'
-                  />
-                </FloatingLabel>
+                <input
+                  type='text'
+                  placeholder='Location'
+                  {...register('location', {
+                    required: 'Location is required!',
+                  })}
+                  className='w-1/3 py-2 px-2 rounded-md mt-2 border border-ascent-2'
+                />
               </div>
               <ul className='flex my-4 gap-4'>
                 {file &&
@@ -266,40 +260,28 @@ const VacationModal = ({
                 </Select>
               </div>
 
-              <FloatingLabel
-                controlId='floatingVacationTitle'
-                label='Title'
-                className='mb-3'
-              >
-                <Form.Control
-                  type='text'
-                  placeholder='Title'
-                  {...register('title', {
-                    required: 'Title is required!',
-                  })}
-                  className='rounded-md border w-full'
-                />
-              </FloatingLabel>
+              <input
+                type='text'
+                placeholder='Title'
+                {...register('title', {
+                  required: 'Title is required!',
+                })}
+                className='w-full py-2 px-2 rounded-md mt-2 border border-ascent-2'
+              />
 
-              <FloatingLabel
-                controlId='floatingVacationDescription'
-                label='Description'
-                className='mb-3'
-              >
-                <Form.Control
-                  type='text'
-                  placeholder='Description'
-                  {...register('description', {
-                    required: 'Write something about your vacation',
-                  })}
-                  className='rounded-md border w-full'
-                />
-              </FloatingLabel>
+              <input
+                type='text'
+                placeholder='Description'
+                {...register('description', {
+                  required: 'Write something about your vacation',
+                })}
+                className='w-full py-2 px-2 rounded-md mt-2 border border-ascent-2'
+              />
             </div>
 
             <div className='flex flex-col gap-4 items-center'>
               {milestones.map((milestone, index) => (
-                <div key={index} className='w-2/3'>
+                <div key={index} className='w-full flex gap-2'>
                   <input
                     type='date'
                     placeholder={`Milestone Date ${index + 1}`}
@@ -308,7 +290,7 @@ const VacationModal = ({
                     }
                     min={startDate}
                     max={endDate}
-                    className='w-full py-3 px-2 rounded-md mt-2 border border-ascent-2'
+                    className='w-full py-1 px-2 rounded-md mt-2 border border-ascent-2'
                   />
                   <input
                     type='text'
