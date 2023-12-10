@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../../NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import UseFunction from '../../Function/UseFunction';
-import { apiRequest, fetchAlbums, handleFileUpload } from '../../../utils';
+import { apiRequest, fetchAlbums, handleFileUpload,handleTokenRefresh } from '../../../utils';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../TextInput';
 import Loading from '../../Loading';
@@ -21,7 +21,7 @@ const AlbumPost = () => {
   const [posting, setPosting] = useState(false);
   const [visibility, setVisibility] = useState('public');
   const [selectedFriends, setSelectedFriends] = useState([]);
-  console.log(selectedFriends);
+  // console.log(selectedFriends);
 
   const { handleLikePost, fetchAlbums, handleDeletePost } = UseFunction();
 
@@ -69,22 +69,22 @@ const AlbumPost = () => {
       const newData = {
         ...data,
         images: uploadedFiles.map((url, index) => ({
-          url: url[0],
+          url: url,
           description: descriptions[index],
         })),
         visibility,
         viewers: selectedFriends,
       };
-      console.log(newData);
+      // console.log(newData);
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/album',
         token: user?.token,
         data: newData,
         method: 'POST',
       });
 
-      console.log(res);
+      // console.log(res);
 
       if (res?.status === 'failed') {
         setErrMsg(res.message);
@@ -114,7 +114,7 @@ const AlbumPost = () => {
             onSubmit={handleSubmit((data) =>
               handleAlbumSubmit(data, selectedFriends, visibility),
             )}
-            className='bg-primary flex flex-col flex-grow justify-between h-full '
+            className='bg-first flex flex-col flex-grow justify-between h-full '
           >
             <div>
               <Select

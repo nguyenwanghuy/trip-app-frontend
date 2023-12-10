@@ -163,12 +163,12 @@ const Profile = () => {
             >
               Friends
             </Button>
-            {/* <Button
+            <Button
               onClick={() => setActiveComponent('images')}
               className='bg-first rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
             >
               Gallery
-            </Button> */}
+            </Button>
           </div>
         </div>
 

@@ -88,7 +88,7 @@ const PostAction = ({
         }}
       >
         <BiComment size={20} />
-        {post?.comment?.length} Comments
+        Comments
       </p>
     </div>
   );

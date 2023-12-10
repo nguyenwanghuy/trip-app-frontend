@@ -4,6 +4,7 @@ import moment from 'moment';
 import { BiLike, BiSolidLike } from 'react-icons/bi';
 import { CommentForm, Loading, ReplyCard } from '../index';
 import { io } from 'socket.io-client';
+import { useSelector } from 'react-redux';
 const Comment = ({
   user,
   post,
@@ -23,6 +24,7 @@ const Comment = ({
   currentComment,
   setCurrentComment,
 }) => {
+
   const handleEditClick = (comment) => {
     setEditComment(comment);
   };
@@ -65,25 +67,17 @@ const Comment = ({
           comments.map((comment) => (
             <div className='w-full pt-3' key={comment._id}>
               <div className='flex gap-1 mb-1'>
-                <Link
-                  to={'/profile/' + comment?.userId?._id}
-                  className='text-decoration-none'
-                >
+              
                   <img
-                    src={comment?.user?.avatar}
-                    alt={comment?.user?.username}
+                    src={comment?.avatar}
+                    alt={comment.from}
                     className='w-10 h-10 rounded-full object-cover'
                   />
-                </Link>
                 <div className='bg-[#DADDE1] px-3 py-1 rounded-xl'>
-                  <Link
-                    to={'/profile/' + comment?.userId?._id}
-                    className='text-decoration-none'
-                  >
+                
                     <p className='font-medium text-base text-ascent-1 my-0'>
-                      {comment?.user?.username}
+                      {comment?.from}
                     </p>
-                  </Link>
                   <p className='text-ascent-2  my-0'>{comment.description}</p>
                 </div>
               </div>
@@ -93,20 +87,20 @@ const Comment = ({
                   <span className='text-ascent-2 text-sm'>
                     {moment(comment?.createdAt).fromNow()}
                   </span>
-                  <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer'>
+                  {/* <p className='flex gap-2 items-center text-base text-ascent-2 cursor-pointer'>
                     {comment?.likes?.includes(user?._id) ? (
                       <BiSolidLike size={20} color='blue' />
                     ) : (
                       <BiLike size={20} />
                     )}
                     {comment?.likes?.length} Likes
-                  </p>
-                  <span
+                  </p> */}
+                  {/* <span
                     className='text-blue cursor-pointer'
                     onClick={() => setReplyComments(comment._id)}
                   >
                     Reply
-                  </span>
+                  </span> */}
 
                   {user?._id === comment?.user?._id && (
                     <span
@@ -129,7 +123,7 @@ const Comment = ({
               </div>
 
               {/* REPLIES */}
-              <div className='px-14 mt-1'>
+              {/* <div className='px-14 mt-1'>
                 {comment?.replies?.length > 0 && (
                   <p
                     className='text-base text-ascent-1 cursor-pointer'
@@ -154,7 +148,7 @@ const Comment = ({
                       }
                     />
                   ))}
-              </div>
+              </div> */}
             </div>
           ))
         ) : (

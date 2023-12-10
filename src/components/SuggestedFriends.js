@@ -32,8 +32,8 @@ useEffect(() => {
     const handleAddFriend = async (friendId) => {
       try {
         const idReq = await handleFriendRequest(friendId);
-        console.log(friendId, 'friendID');
-        console.log(idReq, 'idReq');
+        // console.log(friendId, 'friendID');
+        // console.log(idReq, 'idReq');
         await socket.emit('friendReq', { idReq: idReq, idRecipient: friendId, requestFrom: user._id, avatar: user.avatar, username: user.username });
         setShow(false);
        

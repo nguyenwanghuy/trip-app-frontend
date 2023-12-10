@@ -68,7 +68,7 @@ const CommentForm = ({
 
       // Gửi sự kiện 'send_comment' đến server
       socket.emit('send_comment', newData);
-
+      setCurrentComment('');
       const res = await handleTokenRefresh({
         url: URL,
         data: newData,
@@ -122,6 +122,7 @@ const CommentForm = ({
             placeholder='Write a comment...'
             value={currentComment}
             onChange={(e) => setCurrentComment(e.target.value)}
+            className='py-2'
           />
 
           <div className='absolute top-[0.1rem] right-0 h-full flex items-center pr-3'>
@@ -129,7 +130,7 @@ const CommentForm = ({
               <Loading />
             ) : (
               <CustomButton
-                title='đăng'
+                title='💬'
                 type='submit'
                 // onClick={sendComment}
                 containerStyles=' text-[#DADDE1] py-1 rounded-full font-semibold text-xl pr-2'
