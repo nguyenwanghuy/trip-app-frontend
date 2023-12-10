@@ -25,7 +25,7 @@ export const apiRequest = async ({ url, token, data, method }) => {
         'Content-Type': 'application/json',
       },
     });
-    console.log(result);
+    // console.log(result);
     return result.data;
   } catch (error) {
     console.log(error);
@@ -63,7 +63,7 @@ export const handleAvatarUpload = async ({ file, token }) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log(response);
+    // console.log(response);
     if (response.data.message === 'Uploading avatar successfully') {
       return response.data.avatar;
     } else {
@@ -107,7 +107,7 @@ export const fetchPostsByPage = async (token, dispatch, page, pageSize) => {
 };
 export const likePost = async ({ uri, token }) => {
   try {
-    console.log(uri);
+    // console.log(uri);
     const res = await handleTokenRefresh({
       url: uri,
       token,
@@ -219,7 +219,7 @@ export const fetchVacations = async (token, dispatch, uri, data) => {
       method: 'GET',
       data: data || {},
     });
-    console.log(res);
+    // console.log(res);
     dispatch(SetVacations(res?.data));
     return;
   } catch (error) {
@@ -262,7 +262,7 @@ export const refreshToken = async () => {
 export const handleTokenRefresh = async (requestConfig) => {
   try {
     const { url, token, ...rest } = requestConfig;
-    console.log(requestConfig);
+    // console.log(requestConfig);
     let date = new Date();
     const decodedToken = jwtDecode(token);
 
