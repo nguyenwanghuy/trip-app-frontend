@@ -3,7 +3,7 @@ import VacationModal from '../Modal/VacationModal';
 
 const VacationForm = ({
   user,
-  handlePostSubmit,
+  handleVacationSubmit,
   handleFileChange,
   errMsg,
   setFile,
@@ -26,7 +26,7 @@ const VacationForm = ({
           <div className='w-full'>
             <VacationModal
               user={user}
-              handlePostSubmit={handlePostSubmit}
+              handleVacationSubmit={handleVacationSubmit}
               handleFileChange={handleFileChange}
               errMsg={errMsg}
               setFile={setFile}

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Loading, PostCard, ProfileCard } from '../../components/index';
 import { useParams } from 'react-router-dom';
-import { apiRequest,handleTokenRefresh } from '../../utils';
+import { apiRequest, handleTokenRefresh } from '../../utils';
 import InfoProfileCard from '../InfoProfileCard';
+import VacationCard from '../VacationCard';
 
 const PostProfile = ({ user, UserId, userInfo }) => {
   const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState({});
+  const [vacations, setVacations] = useState({});
 
   // console.log(userInfo);
 
@@ -18,11 +19,11 @@ const PostProfile = ({ user, UserId, userInfo }) => {
     const fetchPosts = async () => {
       try {
         const res = await handleTokenRefresh({
-          url: `/post/${UserId}`,
+          url: `/vacation/${UserId}`,
           token: user.token,
           method: 'GET',
         });
-        setPosts(res.posts);
+        setVacations(res?.vacations);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -40,15 +41,15 @@ const PostProfile = ({ user, UserId, userInfo }) => {
       <div className='w-2/3 flex-1 h-full bg-orimary flex flex-col gap-4'>
         {loading ? (
           <Loading />
-        ) : posts && posts.length > 0 ? (
-          posts.map((post) => (
-            <PostCard
-              key={post?._id}
-              post={post}
-              user={user}
+        ) : vacations && vacations.length > 0 ? (
+          vacations.map((vacation) => (
+            <VacationCard
+              key={vacation?._id}
+              vacation={vacation}
+              // user={user}
               deletePost={handleDelete}
               likePost={handleLikePost}
-              id={post?._id}
+              id={vacation?._id}
             />
           ))
         ) : (

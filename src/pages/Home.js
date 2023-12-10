@@ -18,7 +18,7 @@ import {
   getUserInfo,
   handleFileUpload,
   sendFriendRequest,
-  handleTokenRefresh
+  handleTokenRefresh,
 } from '../utils';
 import UseFunction from '../components/Function/UseFunction';
 import { userLogin } from '../redux/userSlice';
@@ -30,6 +30,8 @@ import { SetPosts } from '../redux/postSlice';
 import VacationCard from '../components/VacationCard';
 import VacationForm from '../components/Form/VacationForm';
 import UpdateVacationModal from '../components/Modal/UpdateVacationModal';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
   const { user } = useSelector((state) => state.user);
@@ -43,13 +45,18 @@ const Home = () => {
   const [show, setShow] = useState(true);
   const [selectedVacation, setSelectedVacation] = useState({});
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const { handleLikePost, fetchPost, handleDeletePost, fetchVacation } =
-    UseFunction();
+  const {
+    handleLikePost,
+    fetchPost,
+    handleDeletePost,
+    fetchVacation,
+    handleLikeVacation,
+  } = UseFunction();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-// console.log(posts);
+  // console.log(posts);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     fetchPostsByPage(user?.token, dispatch, newPage, itemsPerPage);
@@ -75,13 +82,13 @@ const Home = () => {
     FRIENDS: 'friends',
   };
   //1
-  const handlePostSubmit = async (
+  const handleVacationSubmit = async (
     data,
     selectedFriends,
     participants,
     visibility,
-    dateStart,
-    dateEnd,
+    startDate,
+    endDate,
     milestones,
   ) => {
     setPosting(true);
@@ -105,8 +112,8 @@ const Home = () => {
             ? PostVisibility.PUBLIC
             : PostVisibility.FRIENDS,
         viewers: selectedFriends,
-        dateStart,
-        dateEnd,
+        startDate,
+        endDate,
         participants,
         milestones,
       };
@@ -129,6 +136,7 @@ const Home = () => {
         setFile([]);
         setErrMsg('');
         await fetchVacation();
+        toast.success('Upload vacation successfully');
       }
     } catch (error) {
       console.error('Error submitting post:', error);
@@ -154,6 +162,7 @@ const Home = () => {
         console.error('Post update failed:', res.message);
       } else {
         fetchVacation();
+        toast.success('Edit vacation successfully');
       }
     } catch (error) {
       console.error('Error updating post:', error);
@@ -161,7 +170,6 @@ const Home = () => {
   };
 
   const handleUpdatePost = (vacation) => {
-    console.log(vacation);
     setSelectedVacation(vacation);
     setUpdateModalOpen(true);
   };
@@ -175,6 +183,7 @@ const Home = () => {
       console.error('Error deleting post:', error);
     } finally {
       setLoading(false);
+      toast.success('Delete vacation successfully');
     }
   };
 
@@ -238,7 +247,6 @@ const Home = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchPost();
     fetchVacation();
@@ -278,7 +286,7 @@ const Home = () => {
         <div className='flex-1 h-full px-4 flex flex-col gap-6 overflow-y-auto rounded-lg'>
           <VacationForm
             user={user}
-            handlePostSubmit={handlePostSubmit}
+            handleVacationSubmit={handleVacationSubmit}
             handleFileChange={handleFileChange}
             posting={posting}
             errMsg={errMsg}
@@ -300,14 +308,9 @@ const Home = () => {
                     handleUpdate={updatePost}
                     handleUpdatePost={handleUpdatePost}
                     deleteVacation={handleDeleteVacation}
+                    likeVacation={handleLikeVacation}
                   />
                 ))}
-
-              <Pagination
-                current={currentPage}
-                total={totalPages * itemsPerPage}
-                onChange={handlePageChange}
-              />
             </>
           ) : (
             <div className='flex w-full h-full items-center justify-center'>
@@ -321,7 +324,7 @@ const Home = () => {
             user={user}
             errMsg={errMsg}
             vacation={selectedVacation}
-            updatePost={updatePost} // Pass the updatePost function
+            updatePost={updatePost}
             onClose={() => setUpdateModalOpen(false)}
             setFile={setFile}
             file={file}

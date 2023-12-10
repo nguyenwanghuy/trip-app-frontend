@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../../NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import UseFunction from '../../Function/UseFunction';
-import { apiRequest, fetchAlbums, handleFileUpload,handleTokenRefresh } from '../../../utils';
+import { apiRequest, fetchAlbums, handleFileUpload } from '../../../utils';
 import { useForm } from 'react-hook-form';
 import TextInput from '../../TextInput';
 import Loading from '../../Loading';
@@ -77,7 +77,7 @@ const AlbumPost = () => {
       };
       console.log(newData);
 
-      const res = await handleTokenRefresh({
+      const res = await apiRequest({
         url: '/album',
         token: user?.token,
         data: newData,
@@ -114,7 +114,7 @@ const AlbumPost = () => {
             onSubmit={handleSubmit((data) =>
               handleAlbumSubmit(data, selectedFriends, visibility),
             )}
-            className='bg-first flex flex-col flex-grow justify-between h-full '
+            className='bg-primary flex flex-col flex-grow justify-between h-full '
           >
             <div>
               <Select

@@ -9,7 +9,8 @@ import {
   likeAlbums,
   deleteAlbums,
   fetchVacations,
-  handleTokenRefresh
+  handleTokenRefresh,
+  likeVacation,
 } from '../../utils';
 
 const UseFunction = (id) => {
@@ -23,6 +24,21 @@ const UseFunction = (id) => {
         setLoading(true);
         await likePost({ uri: uri, token: user?.token });
         await fetchPosts(user?.token, dispatch);
+      } catch (error) {
+        console.error('Error liking post:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?.token, dispatch],
+  );
+
+  const handleLikeVacation = useCallback(
+    async (uri) => {
+      try {
+        setLoading(true);
+        await likeVacation({ uri: uri, token: user?.token });
+        await fetchVacation(user?.token, dispatch);
       } catch (error) {
         console.error('Error liking post:', error);
       } finally {
@@ -117,6 +133,7 @@ const UseFunction = (id) => {
     handleDeleteAlbum,
     fetchAlbum,
     fetchVacation,
+    handleLikeVacation,
   };
 };
 

@@ -21,11 +21,12 @@ const Comment = ({
   socket,
   setSocket,
   currentComment,
-  setCurrentComment
+  setCurrentComment,
 }) => {
   const handleEditClick = (comment) => {
     setEditComment(comment);
   };
+
   // const [socket, setSocket] = useState(null);
   // useEffect(() => {
   //   const socket = io('http://localhost:8001');
@@ -52,11 +53,10 @@ const Comment = ({
           getComments={() => getComments(post?._id)}
           editComment={editComment}
           setEditComment={setEditComment}
-          currentComment= {currentComment}
-          setCurrentComment= {setCurrentComment}
+          currentComment={currentComment}
+          setCurrentComment={setCurrentComment}
           socket={socket}
           setSocket={setSocket}
-
         />
 
         {loading ? (
@@ -71,7 +71,7 @@ const Comment = ({
                 >
                   <img
                     src={comment?.user?.avatar}
-                    alt={comment?.user.username}
+                    alt={comment?.user?.username}
                     className='w-10 h-10 rounded-full object-cover'
                   />
                 </Link>

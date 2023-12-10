@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextInput, Loading, CustomButton } from '../index';
-import { apiRequest,handleTokenRefresh } from '../../utils';
+import { apiRequest, handleTokenRefresh } from '../../utils';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { io } from 'socket.io-client';
 import { Input } from 'antd';
@@ -11,13 +11,12 @@ const CommentForm = ({
   id,
   replyAt,
   getComments,
-  editComment,  
+  editComment,
   setEditComment,
   currentComment,
   setCurrentComment,
   socket,
-  setSocket
-
+  setSocket,
 }) => {
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState('');
@@ -63,7 +62,7 @@ const CommentForm = ({
       const newData = {
         description: currentComment,
         from: user.username,
-        avatar:user.avatar,
+        avatar: user.avatar,
         replyAt: replyAt,
       };
 
@@ -100,7 +99,7 @@ const CommentForm = ({
   //   if (socket) {
   //     socket.on('receive_comment', (data) => {
   //       console.log('Received comment:', data);
-    
+
   //     });
   //   }
   // }, [socket]);

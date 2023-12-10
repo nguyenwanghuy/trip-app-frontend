@@ -8,16 +8,16 @@ import {
   fetchPosts,
   likePost,
   sendFriendRequest,
-  handleTokenRefresh
-  
+  handleTokenRefresh,
 } from '../utils';
 import { useSelector } from 'react-redux';
+import VacationCard from '../components/VacationCard';
 
 const Search = () => {
   const { query } = useParams();
   const { user } = useSelector((state) => state.user);
   const [searchUsersName, setSearchUsersName] = useState([]);
-  const [searchUsersPost, setSearchUsersPost] = useState([]);
+  const [searchUsersVacation, setSearchUsersVacation] = useState([]);
 
   const handleFriendRequest = async (id) => {
     try {
@@ -36,7 +36,7 @@ const Search = () => {
           method: 'GET',
         });
         setSearchUsersName(res.searchUsers);
-        setSearchUsersPost(res.searchContent);
+        setSearchUsersVacation(res.searchContent);
       } catch (error) {
         console.log(error);
       }
@@ -62,7 +62,7 @@ const Search = () => {
       <div className='h-full w-full flex flex-col gap-6 overflow-y-auto'>
         <div className='grid grid-cols-2 gap-4 bg-first rounded-lg px-4 py-4 mt-4 shadow'>
           {!searchUsersName || searchUsersName.length === 0 ? (
-            <p>No results found</p>
+            <p>No user found</p>
           ) : (
             searchUsersName.map((searchedUser) => (
               <div>
@@ -105,17 +105,17 @@ const Search = () => {
             ))
           )}
         </div>
-        {!searchUsersPost || searchUsersPost.length === 0 ? (
-          <p>No results found</p>
+        {!searchUsersVacation || searchUsersVacation.length === 0 ? (
+          <p>No vacation found</p>
         ) : (
-          searchUsersPost.map((post) => (
-            <PostCard
-              key={post._id}
-              post={post}
+          searchUsersVacation.map((vacation) => (
+            <VacationCard
+              key={vacation._id}
+              vacation={vacation}
               user={user}
               deletePost={handleDelete}
               likePost={handleLikePost}
-              id={post._id}
+              id={vacation._id}
             />
           ))
         )}
