@@ -15,7 +15,7 @@ const SuggestedFriends = ({
   // console.log(user);
 const [socket, setSocket] = useState(null)
 useEffect(() => {
-  const newSocket = io('http://localhost:8001');
+  const newSocket = io('https://trip-app-backend.onrender.com/trip');
   setSocket(newSocket);
   newSocket.on('newFriend', (friendRequest) => {
     // console.log(friendRequest, 'newFriend event');
