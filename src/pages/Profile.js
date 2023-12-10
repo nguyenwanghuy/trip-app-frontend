@@ -8,6 +8,7 @@ import {
   fetchPosts,
   handleFileUpload,
   likePost,
+  handleTokenRefresh,
 } from '../utils';
 import PostProfile from '../components/details/PostProfile';
 import IntroduceProfile from '../components/details/IntroduceProfile';
@@ -30,7 +31,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/user/${id}`,
         token: user.token,
         method: 'GET',
@@ -68,7 +69,7 @@ const Profile = () => {
 
         const uri = await handleFileUpload(file);
 
-        await apiRequest({
+        await handleTokenRefresh({
           url: `/user/upload-avatar`,
           token: user.token,
           method: 'PUT',
@@ -76,7 +77,7 @@ const Profile = () => {
         });
 
         await fetchUserData();
-
+        window.location.reload();
         setFile(null);
       }
     } catch (error) {
@@ -162,12 +163,12 @@ const Profile = () => {
             >
               Friends
             </Button>
-            <Button
+            {/* <Button
               onClick={() => setActiveComponent('images')}
               className='bg-first rounded-tr-3xl rounded-tl-none rounded-bl-3xl rounded-br-none text-ascent-1 text-sm text-center flex items-center justify-center px-10 py-4 m-2 shadow-inner'
             >
               Gallery
-            </Button>
+            </Button> */}
           </div>
         </div>
 

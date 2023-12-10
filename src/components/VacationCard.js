@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiRequest, likeVacation } from '../utils';
+import { apiRequest, handleTokenRefresh, likeVacation } from '../utils';
+import PostContent from './Post/PostContent';
 import PostImage from './Post/PostImage';
 import moment from 'moment';
 import { BsThreeDots } from 'react-icons/bs';
@@ -8,19 +9,6 @@ import { Dropdown, Space } from 'antd';
 import { MdLockPerson, MdPublic } from 'react-icons/md';
 import { FaUserFriends } from 'react-icons/fa';
 import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi';
-
-// const getPostComments = async (id, token) => {
-//   try {
-//     const res = await apiRequest({
-//       url: '/comment/' + id,
-//       token: token,
-//       method: 'GET',
-//     });
-//     return res.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 const VacationCard = ({
   vacation,
@@ -169,8 +157,6 @@ const VacationCard = ({
           )}
           {vacation.likes.length} Likes
         </p>
-
-        <p> view</p>
       </div>
     </div>
   );

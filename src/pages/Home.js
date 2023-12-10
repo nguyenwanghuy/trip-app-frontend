@@ -18,6 +18,7 @@ import {
   getUserInfo,
   handleFileUpload,
   sendFriendRequest,
+  handleTokenRefresh,
 } from '../utils';
 import UseFunction from '../components/Function/UseFunction';
 import { userLogin } from '../redux/userSlice';
@@ -29,6 +30,8 @@ import { SetPosts } from '../redux/postSlice';
 import VacationCard from '../components/VacationCard';
 import VacationForm from '../components/Form/VacationForm';
 import UpdateVacationModal from '../components/Modal/UpdateVacationModal';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
   const { user } = useSelector((state) => state.user);
@@ -84,8 +87,8 @@ const Home = () => {
     selectedFriends,
     participants,
     visibility,
-    dateStart,
-    dateEnd,
+    startDate,
+    endDate,
     milestones,
   ) => {
     setPosting(true);
@@ -109,22 +112,18 @@ const Home = () => {
             ? PostVisibility.PUBLIC
             : PostVisibility.FRIENDS,
         viewers: selectedFriends,
-        dateStart,
-        dateEnd,
+        startDate,
+        endDate,
         participants,
         milestones,
       };
 
-      console.log(newData);
-
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/vacation/',
         token: user?.token,
         data: newData,
         method: 'POST',
       });
-
-      console.log(res);
 
       if (res?.status === 'failed') {
         setErrMsg(res.message);
@@ -137,6 +136,7 @@ const Home = () => {
         setFile([]);
         setErrMsg('');
         await fetchVacation();
+        toast.success('Upload vacation successfully');
       }
     } catch (error) {
       console.error('Error submitting post:', error);
@@ -151,7 +151,7 @@ const Home = () => {
         ...editData,
       };
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/vacation/${vacationId}`,
         token: user?.token,
         data: newData,
@@ -162,6 +162,7 @@ const Home = () => {
         console.error('Post update failed:', res.message);
       } else {
         fetchVacation();
+        toast.success('Edit vacation successfully');
       }
     } catch (error) {
       console.error('Error updating post:', error);
@@ -169,7 +170,6 @@ const Home = () => {
   };
 
   const handleUpdatePost = (vacation) => {
-    console.log(vacation);
     setSelectedVacation(vacation);
     setUpdateModalOpen(true);
   };
@@ -183,12 +183,13 @@ const Home = () => {
       console.error('Error deleting post:', error);
     } finally {
       setLoading(false);
+      toast.success('Delete vacation successfully');
     }
   };
 
   const fetchSuggestedRequests = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/user/suggest/u',
         token: user?.token,
         method: 'GET',
@@ -199,11 +200,11 @@ const Home = () => {
       console.log(error);
     }
   };
-
   const handleFriendRequest = async (id) => {
     try {
       const res = await sendFriendRequest(user.token, id);
       await fetchSuggestedRequests();
+      return res.data._id;
     } catch (error) {
       console.error(error);
     }
@@ -211,7 +212,7 @@ const Home = () => {
 
   const handleFetchFriendRequest = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/get-friend-request',
         token: user.token,
         method: 'POST',
@@ -234,7 +235,7 @@ const Home = () => {
 
   const handleAcceptFriendRequest = async (id, status) => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/accept-request',
         token: user.token,
         method: 'POST',
@@ -246,36 +247,6 @@ const Home = () => {
       console.error(error);
     }
   };
-  const refreshToken = async () => {
-    try {
-      const res = await axios.post('/auth/refresh', {
-        withCredentials: true,
-      });
-      return res.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  let axiosJWT = axios.create();
-  axiosJWT.interceptors.request.use(
-    async (config) => {
-      let date = new Date();
-      const decodedToken = jwtDecode(user?.token);
-      if (decodedToken.exp < date.getTime() / 1000) {
-        const data = await refreshToken();
-        const refreshUser = {
-          ...user,
-          token: data.token,
-        };
-        dispatch(userLogin(refreshUser));
-        config.headers['token'] = data.token;
-      }
-      return config;
-    },
-    (err) => {
-      return Promise.reject(err);
-    },
-  );
   useEffect(() => {
     fetchPost();
     fetchVacation();
@@ -287,7 +258,7 @@ const Home = () => {
   }, []);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post?page=${currentPage}&pageSize=${itemsPerPage}`,
         token: user?.token,
         method: 'GET',

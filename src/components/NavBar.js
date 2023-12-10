@@ -9,7 +9,7 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { SetTheme } from '../redux/theme';
 import { userLogout } from '../redux/userSlice';
 import NoProfile from '../assets/NoProfile.jpg';
-import { apiRequest, fetchPosts, searchUser } from '../utils';
+import { apiRequest, fetchPosts, searchUser,handleTokenRefresh } from '../utils';
 import { Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
@@ -37,7 +37,7 @@ const NavBar = () => {
 
   const setSearch = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/user/search/s?term=${query}`,
         token: user.token,
         method: 'GET',

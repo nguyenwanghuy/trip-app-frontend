@@ -4,6 +4,8 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 import { CustomButton } from '.';
 import { io } from 'socket.io-client';
 import { useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const SuggestedFriends = ({
   suggestedFriends,
   handleFriendRequest,
@@ -16,19 +18,29 @@ useEffect(() => {
   const newSocket = io('http://localhost:8001');
   setSocket(newSocket);
   newSocket.on('newFriend', (friendRequest) => {
-    console.log(friendRequest, 'newFriend event');
+    // console.log(friendRequest, 'newFriend event');
+    toast.warn(` ${friendRequest.username} sent a friend request!`, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2000
+    });
   });
   return () => {
     newSocket.disconnect();
   };
 }, []);
     // const socket = io('http://localhost:8001');
-    const handleAddFriend = async(friendId) => {
-      handleFriendRequest(friendId)
-     await socket.emit('friendReq', {idRecipient: friendId, requestFrom: user._id, avatar:user.avatar, username:user.username});
-      // console.log(friendId, 'friend suggestion');
-      setShow(false)
-    }
+    const handleAddFriend = async (friendId) => {
+      try {
+        const idReq = await handleFriendRequest(friendId);
+        console.log(friendId, 'friendID');
+        console.log(idReq, 'idReq');
+        await socket.emit('friendReq', { idReq: idReq, idRecipient: friendId, requestFrom: user._id, avatar: user.avatar, username: user.username });
+        setShow(false);
+       
+      } catch (error) {
+        console.error(error);
+      }
+    };
   return (
     <div className='w-full bg-first shadow-sm rounded-lg px-4 py-3 '>
       <div className='flex items-center justify-between text-lg text-ascent-1 border-b border-[#66666645]'>
@@ -68,6 +80,7 @@ useEffect(() => {
           </div>
         ))}
       </div>
+      <ToastContainer />
     </div>
   );
 };

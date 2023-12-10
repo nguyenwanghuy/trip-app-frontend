@@ -21,6 +21,7 @@ import {
   getUserInfo,
   handleFileUpload,
   sendFriendRequest,
+  handleTokenRefresh,
 } from '../utils';
 import UseFunction from '../components/Function/UseFunction';
 import { userLogin } from '../redux/userSlice';
@@ -28,6 +29,8 @@ import UpdatePostModal from '../components/UpdatePostModal ';
 import FriendRequests from '../components/FriendRequestCard';
 import SuggestedFriends from '../components/SuggestedFriends';
 import moment from 'moment';
+import { Button, Modal, Form, DatePicker, Input, message } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
@@ -46,11 +49,12 @@ const Vacation = () => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const { handleLikePost, handleDeletePost } = UseFunction();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [addMilestoneModalVisible, setAddMilestoneModalVisible] =
+    useState(false);
 
   const { id } = useParams();
-
+  const [form] = Form.useForm();
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     fetchPostsByPage(user?.token, dispatch, newPage, itemsPerPage);
@@ -65,9 +69,20 @@ const Vacation = () => {
     formState: { errors },
   } = useForm();
 
+  const disabledDate = (currentDate) => {
+    const milestoneDates = vacation.milestones.map((milestone) =>
+      moment(milestone.date).startOf('day'),
+    );
+    return (
+      currentDate.isBefore(moment(vacation.startDate).startOf('day')) ||
+      currentDate.isAfter(moment(vacation.endDate).startOf('day')) ||
+      milestoneDates.some((date) => date.isSame(currentDate, 'day'))
+    );
+  };
+
   const fetchVacation = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/vacation/users/${id}`,
         token: user.token,
         method: 'GET',
@@ -100,8 +115,14 @@ const Vacation = () => {
         ...prevVacation,
         milestones: [...prevVacation.milestones, newMilestone],
       }));
+
+      toast.success('Milestone added successfully');
     } catch (error) {
       console.error('Error handling add milestone:', error);
+    } finally {
+      form.resetFields(['date', 'description']);
+      setAddMilestoneModalVisible(false);
+      await fetchVacation();
     }
   };
 
@@ -151,7 +172,7 @@ const Vacation = () => {
         milestoneId: selectedMilestone._id,
       };
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/post/',
         token: user?.token,
         data: newData,
@@ -187,7 +208,7 @@ const Vacation = () => {
 
       console.log(newData);
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/post/${postId}`,
         token: user?.token,
         data: newData,
@@ -207,7 +228,7 @@ const Vacation = () => {
 
   const fetchSuggestedRequests = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/user/suggest/u',
         token: user?.token,
         method: 'GET',
@@ -230,7 +251,7 @@ const Vacation = () => {
 
   const handleFetchFriendRequest = async () => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/get-friend-request',
         token: user.token,
         method: 'POST',
@@ -253,7 +274,7 @@ const Vacation = () => {
 
   const handleAcceptFriendRequest = async (id, status) => {
     try {
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: '/test/accept-request',
         token: user.token,
         method: 'POST',
@@ -360,6 +381,16 @@ const Vacation = () => {
                   ))}
               </div>
             ))}
+          {user?._id === vacation.user?._id && (
+            <Button
+              type='primary'
+              className='bg-[#0d6efd]'
+              icon={<PlusOutlined />}
+              onClick={() => setAddMilestoneModalVisible(true)}
+            >
+              Add Milestone
+            </Button>
+          )}
         </div>
 
         {updateModalOpen && (
@@ -391,6 +422,42 @@ const Vacation = () => {
           <Ads />
         </div>
       </div>
+
+      <Modal
+        title='Add Milestone'
+        visible={addMilestoneModalVisible}
+        onCancel={() => {
+          form.resetFields();
+          setAddMilestoneModalVisible(false);
+        }}
+        footer={null}
+        destroyOnClose={true}
+      >
+        {/* Form for adding a milestone */}
+        <Form onFinish={handleAddMilestone}>
+          <Form.Item
+            label='Date'
+            name='date'
+            rules={[{ required: true, message: 'Please select a date!' }]}
+          >
+            <DatePicker style={{ width: '100%' }} disabledDate={disabledDate} />
+          </Form.Item>
+
+          <Form.Item
+            label='Description'
+            name='description'
+            rules={[{ required: true, message: 'Please enter a description!' }]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item>
+            <Button className='bg-[#0d6efd]' htmlType='submit'>
+              Add Milestone
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

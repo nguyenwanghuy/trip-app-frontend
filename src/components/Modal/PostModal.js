@@ -130,10 +130,11 @@ const PostModal = ({
                   </li>
                 ))}
               </ul>
-              <div className='w-2/3'>
+              <div className='w-full pb-3'>
                 <Select
                   placeholder='Select a milestone'
                   onChange={(value) => handleMilestoneSelect(value)}
+                  className='w-full'
                 >
                   {Array.isArray(milestones) &&
                     milestones.map((milestone, index) => (

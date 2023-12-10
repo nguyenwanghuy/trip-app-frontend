@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, Select } from 'antd';
 import { useForm } from 'react-hook-form';
-import TextInput from '../TextInput';
-import { BsFiletypeGif, BsPersonFillAdd } from 'react-icons/bs';
 import { BiImages, BiSolidVideo } from 'react-icons/bi';
 import FriendListDropdown from '../FriendListDropdown';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-// import { Option } from 'antd/es/mentions';
+import { DatePicker } from 'antd';
 
 const VacationModal = ({
   handleVacationSubmit,
@@ -183,33 +179,15 @@ const VacationModal = ({
               </div>
               <div className='flex gap-4 items-center'>
                 <div className='flex gap-4 w-2/3'>
-                  <input
-                    type='date'
+                  <DatePicker
                     placeholder='Start Date'
-                    {...register('startDate', {
-                      required: 'Start Date is required',
-                    })}
-                    onChange={(e) => {
-                      setValue('startDate', e.target.value, {
-                        shouldValidate: true,
-                      });
-                      setStartDate(e.target.value);
-                    }}
+                    onChange={(date, dateString) => setStartDate(dateString)}
                     className='w-full px-2 rounded-md mt-2 border border-ascent-2'
                   />
 
-                  <input
-                    type='date'
+                  <DatePicker
                     placeholder='End Date'
-                    {...register('endDate', {
-                      required: 'End Date is required',
-                    })}
-                    onChange={(e) => {
-                      setValue('endDate', e.target.value, {
-                        shouldValidate: true,
-                      });
-                      setEndDate(e.target.value);
-                    }}
+                    onChange={(date, dateString) => setEndDate(dateString)}
                     className='w-full py-2 px-2 rounded-md mt-2 border border-ascent-2'
                   />
                 </div>

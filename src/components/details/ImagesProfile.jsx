@@ -3,7 +3,7 @@ import { Row, Col, Card, Spin, Tabs } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import UseFunction from '../Function/UseFunction';
 import { useSelector } from 'react-redux';
-import { apiRequest } from '../../utils';
+import { apiRequest, handleTokenRefresh } from '../../utils';
 import Loading from '../Loading';
 import AlbumInfo from './ImageDetails/AlbumInfo';
 
@@ -13,42 +13,19 @@ const ImagesProfile = ({ UserId, userInfo }) => {
   const { user } = useSelector((state) => state.user);
 
   const { albums } = useSelector((state) => state.album);
-  console.log(albums);
   const { handleLikePost, fetchAlbum, handleDeletePost } = UseFunction();
   const [loading, setLoading] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
 
   useEffect(() => {
     fetchAlbum();
   }, []);
 
-  const fetchPosts = async () => {
-    try {
-      const res = await apiRequest({
-        url: `/post/${UserId}`,
-        token: user.token,
-        method: 'GET',
-      });
-      console.log(res);
-      setPosts(res.posts);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchPosts();
-  }, [UserId, user.token]);
-
   const userAlbums = Array.isArray(albums)
     ? albums.filter((album) => album.user._id === userInfo._id)
     : [];
 
-  const flattenedImages = posts.flatMap((post) => post.image);
-
   const handleAlbumClick = (albumId) => {
-    console.log(albumId);
     setSelectedAlbum(albumId);
   };
 
@@ -86,27 +63,6 @@ const ImagesProfile = ({ UserId, userInfo }) => {
                   </div>
                 </Col>
               ))}
-          </div>
-        </TabPane>
-
-        <TabPane tab='Posts' key='2'>
-          <div className='w-full grid grid-cols-5 gap-4'>
-            {loading ? (
-              <Loading />
-            ) : posts && posts.length > 0 ? (
-              flattenedImages.map((imageUrl, imgIndex) => (
-                <img
-                  key={imgIndex}
-                  src={imageUrl}
-                  alt={`Post Image ${imgIndex + 1}`}
-                  className='w-full h-full'
-                />
-              ))
-            ) : (
-              <div className='flex w-full h-full items-center justify-center'>
-                <p className='text-lg text-ascent-2'>No Post Available</p>
-              </div>
-            )}
           </div>
         </TabPane>
       </Tabs>

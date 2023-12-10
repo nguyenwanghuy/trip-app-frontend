@@ -7,7 +7,7 @@ import {
 } from 'react-icons/bs';
 import { CiLocationOn } from 'react-icons/ci';
 import { useDispatch, useSelector } from 'react-redux';
-import { apiRequest, handleFileUpload } from '../../utils';
+import { apiRequest, handleFileUpload ,handleTokenRefresh} from '../../utils';
 import { updateProfile, userLogin } from '../../redux/userSlice';
 import EditProfileForm from '../Modal/EditProfile';
 import { LiaEditSolid, LiaBirthdayCakeSolid } from 'react-icons/lia';
@@ -44,7 +44,7 @@ const IntroduceProfile = ({ userInfo, fetchUserData }) => {
         profession,
       } = data;
 
-      const res = await apiRequest({
+      const res = await handleTokenRefresh({
         url: `/auth/me/profile/${user?._id}`,
         data: {
           fullname,

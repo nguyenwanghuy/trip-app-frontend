@@ -114,7 +114,7 @@ const AlbumPost = () => {
             onSubmit={handleSubmit((data) =>
               handleAlbumSubmit(data, selectedFriends, visibility),
             )}
-            className='bg-first flex flex-col flex-grow justify-between h-full '
+            className='bg-primary flex flex-col flex-grow justify-between h-full '
           >
             <div>
               <Select

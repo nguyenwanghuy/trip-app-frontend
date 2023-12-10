@@ -90,7 +90,6 @@ const PostAction = ({
         <BiComment size={20} />
         {post?.comment?.length} Comments
       </p>
-      <p>{post.viewCount} view</p>
     </div>
   );
 };
